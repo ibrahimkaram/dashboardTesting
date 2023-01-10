@@ -17,7 +17,7 @@
               <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
             </div>
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-              <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+              <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</NuxtLink>
             </div>
           </div>
           <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -95,11 +95,11 @@ const user = {
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Overview', href: '#', current: true },
-  { name: 'Currencies', href: '#', current: false },
-  { name: 'NFTs', href: '#', current: false },
-  { name: 'Launchpad', href: '#', current: false },
-  { name: 'Collaborate', href: '#', current: false },
+  { name: 'Overview', to: '/', current: true },
+  { name: 'Currencies', to: '/currencies', current: false },
+  { name: 'NFTs', to: '/nfts', current: false },
+  { name: 'Launchpad', to: '/launchpad', current: false },
+  { name: 'Collaborate', to: '/collaborate', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },

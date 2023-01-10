@@ -1,0 +1,34 @@
+<template>
+  <!--
+    This example requires updating your template:
+
+    ```
+    <html class="h-full">
+    <body class="h-full">
+    ```
+  -->
+  <div class="min-h-full">
+    <div class="py-10">
+      <header>
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <DefaultHeader/>
+        </div>
+      </header>
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <!-- Replace with your content -->
+          <div class="px-4 py-8 sm:px-0">
+            <div class="h-96 rounded-lg border-4 shadow">
+              <CurrencyList/>
+            </div>
+          </div>
+          <!-- /End replace -->
+        </div>
+      </main>
+    </div>
+  </div>
+</template>
+
+<script setup>
+
+</script>

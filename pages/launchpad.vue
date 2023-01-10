@@ -1,16 +1,13 @@
 <template>
   <div>
-    <h1>Bro connect your wallet</h1>
+    <h1>Welcome to Launchpad</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ConnectWallet"
+  name: "launchpad"
 }
-
-// Ibrahim code here
-
 </script>
 
 <style scoped>

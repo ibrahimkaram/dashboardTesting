@@ -1,13 +1,14 @@
 
 <template>
   <ClientOnly>
-    <Vue3Lottie class="bg-red-200 h-10 w-10"
-    :animationData = "checkmark"
-    :height="200"
-    :width="200"
-  />
   <h1>{{ message }}</h1>
-  <button @click="clickme"> click me!</button>
+  <button @click="signinWallet"> click me!</button>
+  <w3m-network-switch class="bg-red-200"></w3m-network-switch>
+  <w3m-core-button></w3m-core-button>
+
+  <button @click="myswitchNetwork(1)"> Switch to 01</button>
+
+  <button @click="myswitchNetwork(137)"> Switch to 137</button>
   </ClientOnly>
   
   </template>
@@ -15,13 +16,86 @@
   <script setup>
   import checkmark  from '../assets/animations/checkmark.json'
   import { ref } from 'vue'
+  import { configureChains, createClient } from "@wagmi/core";
+
+import { polygonMumbai, mainnet, polygon } from "@wagmi/core/chains";
+
+import { Web3Modal } from "@web3modal/html";
+
+
+import { switchNetwork } from '@wagmi/core'
+
+
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
+
+
+
+
   var count = 0;
-const message = ref('Hello World!')
+
+
+const message = ref("address here")
   function clickme(){
     count ++;
     console.log("you clecked!");
-message.value = 'Change me ! ' + count ;
+    message.value = 'Change me ! ' + count ;
   }
+  const projectId = "c4ebec790772322761f1607cb06c5db8"
+
+
+  const chains = [ mainnet, polygon, polygonMumbai];
+
+  // Wagmi Core Client
+const { provider } = configureChains(chains, [
+  walletConnectProvider({ projectId: projectId}),
+]);
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: modalConnectors({ appName: "Osis DashBoard", chains }),
+  provider,
+});
+
+// Web3Modal and Ethereum Client
+const ethereumClient = new EthereumClient(wagmiClient, chains);
+const web3modal = new Web3Modal(
+  { projectId: projectId },
+  ethereumClient
+);
+
+console.log('connections is done' )
+
+web3modal.setTheme({
+  themeMode: "light",
+  themeColor: "blue",
+  themeBackground: "themeColor",
+});
+
+
+
+  
+async function signinWallet(){
+
+
+  
+ await web3modal.openModal();
+
+const account = ethereumClient.getAccount();
+console.log(account);
+
+message.value = account.address;
+
+}
+
+async function  myswitchNetwork(id) {
+
+const network = await switchNetwork({
+  chainId: id,
+})
+    }
 
   </script>
   

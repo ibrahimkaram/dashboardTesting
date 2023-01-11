@@ -20,7 +20,7 @@
             </thead>
             <tbody class="divide-y divide-gray-200">
             <tr v-for="token in currencies" :key="token.name">
-              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ token.name }}</td>
+              <NuxtLink :to="`/currencies/${token.name}`" class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ token.name }}</NuxtLink>
               <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.balance }}</td>
               <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.dateCreated }}</td>
               <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.role }}</td>

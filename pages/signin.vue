@@ -1,26 +1,5 @@
-<!--
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
-  <!--
-    This example requires updating your template:
 
-    ```
-    <html class="h-full bg-white">
-    <body class="h-full">
-    ```
-  -->
   <div class="flex min-h-full">
     <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
@@ -30,7 +9,7 @@
           <p class="mt-2 text-sm text-gray-600">
             Or
             {{ ' ' }}
-            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">start your 14-day free trial</a>
+            <NuxtLink to="/" class="font-medium text-indigo-600 hover:text-indigo-500">start your 14-day free trial</NuxtLink>
           </p>
         </div>
 
@@ -119,3 +98,9 @@
     </div>
   </div>
 </template>
+
+<script setup>
+definePageMeta({
+  layout: false,
+});
+</script>

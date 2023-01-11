@@ -10,13 +10,13 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <!-- Replace with your content -->
           <div class="px-4 py-8 sm:px-0">
-            <div class="h-96 rounded-lg border-4 shadow">
+            <div class="h-96 rounded-lg  shadow-lg">
               <div class="px-4 sm:px-6 lg:px-8">
                 <div>
                   <DefaultListHeader/>
                 </div>
                 <div class="mt-8 flex flex-col">
-                  <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                     <div v-if="currencies.length!==0" class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                       <table class="min-w-full divide-y divide-gray-300">
                         <thead>

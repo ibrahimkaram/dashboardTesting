@@ -1,5 +1,5 @@
 <template>
-
+ <ClientOnly>
   <div class="flex min-h-full">
     <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
@@ -18,6 +18,10 @@
             <div>
               <p class="text-sm font-medium text-gray-700">Sign in with</p>
 
+              <div class="flex flex-col items-center w-full py-2">
+                <w3m-core-button></w3m-core-button>
+              </div>
+<!-- 
               <div class="mt-1 grid grid-cols-3 gap-3">
                 <div>
                   <a href="#" class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50">
@@ -45,7 +49,7 @@
                     </svg>
                   </a>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="relative mt-6">
@@ -59,6 +63,7 @@
           </div>
 
           <div class="mt-6">
+           <div v-if="!isConnected">
             <form action="#" method="POST" class="space-y-6">
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
@@ -89,6 +94,14 @@
                 <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign in</button>
               </div>
             </form>
+           </div>
+           <div v-else>
+            <div>
+               <NuxtLink to="/"  class="flex w-full justify-center rounded-md border 
+                border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm
+                 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Next</NuxtLink>
+              </div>
+           </div>
           </div>
         </div>
       </div>
@@ -97,10 +110,89 @@
       <img class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80" alt="" />
     </div>
   </div>
+</ClientOnly>
 </template>
 
 <script setup>
+
+import { ref } from 'vue'
+  import { configureChains, createClient } from "@wagmi/core";
+
+import { polygonMumbai, mainnet, polygon } from "@wagmi/core/chains";
+
+import { Web3Modal } from "@web3modal/html";
+
+
+import { switchNetwork } from '@wagmi/core'
+
+
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
+
+
+
 definePageMeta({
   layout: false,
 });
+
+
+  
+
+
+const isConnected = ref(false)
+
+const projectId = "c4ebec790772322761f1607cb06c5db8"
+
+
+  const chains = [ mainnet, polygon, polygonMumbai];
+
+  // Wagmi Core Client
+const { provider } = configureChains(chains, [
+  walletConnectProvider({ projectId: projectId}),
+]);
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: modalConnectors({ appName: "Osis DashBoard", chains }),
+  provider,
+});
+
+// Web3Modal and Ethereum Client
+const ethereumClient = new EthereumClient(wagmiClient, chains);
+const web3modal = new Web3Modal(
+  { projectId: projectId },
+  ethereumClient
+);
+
+console.log('connections is done' )
+
+web3modal.setTheme({
+  themeMode: "light",
+  themeColor: "blue",
+  themeBackground: "themeColor",
+});
+
+
+const usnubscribe = web3modal.subscribeModal(  (newState) =>{
+  console.log(newState)
+  if(!newState.open) {
+    signinWallet()
+  }
+}
+);
+  
+async function signinWallet(){
+  
+// await web3modal.openModal();
+const account = ethereumClient.getAccount();
+console.log(account);
+if(account.address != null || account.address != ""){
+ isConnected.value = true
+}
+
+
+}
+
 </script>

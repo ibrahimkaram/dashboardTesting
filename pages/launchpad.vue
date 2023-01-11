@@ -38,49 +38,49 @@
 
 <script setup>
 import {
-  Bars4Icon,
-  CalendarIcon,
-  ClockIcon,
+  CurrencyDollarIcon,
   PhotoIcon,
-  TableCellsIcon,
-  ViewColumnsIcon,
+  BuildingLibraryIcon,
+  RocketLaunchIcon,
+  ScaleIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/vue/24/outline'
 
 const items = [
   {
-    title: 'Create a List',
-    description: 'Another to-do system you’ll try but eventually give up on.',
-    icon: Bars4Icon,
+    title: 'Create a Currency',
+    description: 'Be the master of your own economy.',
+    icon: CurrencyDollarIcon,
     background: 'bg-pink-500',
   },
   {
-    title: 'Create a Calendar',
-    description: 'Stay on top of your deadlines, or don’t — it’s up to you.',
-    icon: CalendarIcon,
+    title: 'Create an NFT',
+    description: 'Make your mark on the digital world, non-fungible.',
+    icon: PhotoIcon,
     background: 'bg-yellow-500',
   },
   {
-    title: 'Create a Gallery',
-    description: 'Great for mood boards and inspiration.',
-    icon: PhotoIcon,
+    title: 'Create a Neo Bank',
+    description: 'Pave the way for the future of finance.',
+    icon: BuildingLibraryIcon,
     background: 'bg-green-500',
   },
   {
-    title: 'Create a Board',
-    description: 'Track tasks in different stages of your project.',
-    icon: ViewColumnsIcon,
+    title: 'Create a Game',
+    description: 'Why play by the rules - when you can make your own game.',
+    icon: RocketLaunchIcon,
     background: 'bg-blue-500',
   },
   {
-    title: 'Create a Spreadsheet',
-    description: 'Lots of numbers and things — good for nerds.',
-    icon: TableCellsIcon,
+    title: 'Create a Vote System',
+    description: 'Give people a voice in the democratic process',
+    icon: ScaleIcon,
     background: 'bg-indigo-500',
   },
   {
-    title: 'Create a Timeline',
-    description: 'Get a birds-eye-view of your procrastination.',
-    icon: ClockIcon,
+    title: 'Create a ChatBot',
+    description: "Talk too much? - there's a robot for that",
+    icon: ChatBubbleLeftRightIcon,
     background: 'bg-purple-500',
   },
 ]

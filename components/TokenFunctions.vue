@@ -10,47 +10,33 @@
       </a>
     </div>
     <div class="bg-gray-50 px-5 py-5 sm:px-8 sm:py-8">
-      <div>
-        <h3 class="text-base font-medium text-gray-500">Recent Posts</h3>
-        <ul role="list" class="mt-4 space-y-4">
-          <li v-for="post in recentPosts" :key="post.id" class="truncate text-base">
-            <a :href="post.href" class="font-medium text-gray-900 transition duration-150 ease-in-out hover:text-gray-700">{{ post.name }}</a>
-          </li>
-        </ul>
-      </div>
-      <div class="mt-5 text-sm">
-        <a href="#" class="font-medium text-indigo-600 transition duration-150 ease-in-out hover:text-indigo-500">
-          View all posts
-          <span aria-hidden="true"> &rarr;</span>
-        </a>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { BookmarkSquareIcon, CalendarIcon, LifebuoyIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline'
+import { FireIcon, BanknotesIcon, ArrowUpIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline'
 
 const resources = [
   {
-    name: 'Help Center',
-    description: 'Get all of your questions answered in our forums or contact support.',
+    name: 'Send Tokens',
+    description: 'Transfer from your balance to another address.',
     href: '#',
-    icon: LifebuoyIcon,
+    icon: ArrowUpIcon,
   },
   {
-    name: 'Guides',
-    description: 'Learn how to maximize our platform to get the most out of it.',
+    name: 'Burn',
+    description: 'Reduce the total supply of your token.',
     href: '#',
-    icon: BookmarkSquareIcon,
+    icon: FireIcon,
   },
   {
-    name: 'Events',
-    description: 'See what meet-ups and other events we might be planning near you.',
+    name: 'Mint',
+    description: 'Increase the total circulating supply of your token.',
     href: '#',
-    icon: CalendarIcon,
+    icon: BanknotesIcon,
   },
-  { name: 'Security', description: 'Understand how we take your privacy seriously.', href: '#', icon: ShieldCheckIcon },
+  { name: 'Advanced', description: 'Look under the hood for more functions.', href: '#', icon: AdjustmentsHorizontalIcon },
 ]
 const recentPosts = [
   { id: 1, name: 'Boost your conversion rate', href: '#' },

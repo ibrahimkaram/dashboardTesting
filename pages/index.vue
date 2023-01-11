@@ -3,7 +3,7 @@
     <div class="py-10">
       <header>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <BreadcrumbHeader :crumbs="crumbs"/>
+          <BreadcrumbHeader :crumbs="crumbs" :pageName="pageName"/>
         </div>
       </header>
       <main>
@@ -62,8 +62,9 @@
 import DropdownButton from "/components/DropdownButton";
 import EmptyTokenListState from "/components/EmptyTokenListState";
 
+const pageName = 'Token Dashboard'
 const crumbs = [
-  { name: 'Overview', to: '/', current: true },
+  // { name: 'Overview', to: '/', current: true },
 ]
 
 const currencies = [

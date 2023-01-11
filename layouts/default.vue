@@ -1,12 +1,4 @@
 <template>
-  <!--
-    This example requires updating your template:
-
-    ```
-    <html class="h-full">
-    <body class="h-full">
-    ```
-  -->
   <div class="min-h-full">
     <Disclosure as="nav" class="border-b border-gray-200 bg-white" v-slot="{ open }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -17,7 +9,7 @@
               <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
             </div>
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-              <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</NuxtLink>
+              <NuxtLink v-for="item in navigation" :key="item.name" @click="switchTabs(item.id)" :to="item.to" :class="[tabId===item.id ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="tabId===item.id ? 'page' : undefined">{{ item.name }}</NuxtLink>
             </div>
           </div>
           <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -85,25 +77,33 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+const tabId = ref(0)
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
+  name: 'Luigi Cook',
+  email: 'luigi@example.com',
   imageUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Overview', to: '/', current: true },
-  { name: 'Currencies', to: '/currencies', current: false },
-  { name: 'NFTs', to: '/nfts', current: false },
-  { name: 'Launchpad', to: '/launchpad', current: false },
-  { name: 'Collaborate', to: '/collaborate', current: false },
+  { name: 'Overview', to: '/', current: true, id:0 },
+  { name: 'Currencies', to: '/currencies', current: false, id:1 },
+  { name: 'NFTs', to: '/nfts', current: false, id:2 },
+  { name: 'Launchpad', to: '/launchpad', current: false, id:3 },
+  { name: 'Collaborate', to: '/collaborate', current: false, id:4 },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: '/' },
   { name: 'Settings', to: '/' },
   { name: 'Sign out', to: '/signin' },
 ]
+
+function switchTabs(id){
+  tabId.value = id;
+  console.log("this switch happening")
+}
+
 </script>

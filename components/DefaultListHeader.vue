@@ -9,10 +9,10 @@
           <div class="relative flex-grow focus-within:z-10">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             </div>
-            <input type="text" name="mobile-search-candidate" id="mobile-search-candidate" class="block w-full rounded-none rounded-l-md border-gray-300 pl-4 focus:border-indigo-500 focus:ring-indigo-500 sm:hidden" placeholder="Search by name or ticker" />
-            <input type="text" name="desktop-search-candidate" id="desktop-search-candidate" class="hidden w-full h-full rounded-none rounded-l-md border-gray-300 pl-4 focus:border-indigo-500 focus:ring-indigo-500 sm:block sm:text-sm" placeholder="Search name or ticker " />
+            <input type="text" name="mobile-search-candidate" id="mobile-search-candidate" class="block w-full rounded-none rounded-l-md border-gray-300 pl-4 focus:border-primary-blue  focus:ring-primary-blue  sm:hidden" placeholder="Search by name or ticker" />
+            <input type="text" name="desktop-search-candidate" id="desktop-search-candidate" class="hidden w-full h-full rounded-none rounded-l-md border-gray-300 pl-4 focus:border-primary-blue  focus:ring-primary-blue  sm:block sm:text-sm" placeholder="Search name or ticker " />
           </div>
-          <button type="button" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <button type="button" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-primary-blue  focus:outline-none focus:ring-1 focus:ring-primary-blue ">
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </button>
         </div>

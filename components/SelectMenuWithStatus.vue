@@ -1,11 +1,11 @@
 <template>
-  <Listbox as="div" v-model="selected" class="w-36">
+  <Listbox as="div" v-model="selected" class="w-40">
 
     <div class="relative mt-1">
       <ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-primary-blue focus:outline-none focus:ring-primary-blue focus:ring- sm:text-sm">
         <span class="flex items-center">
-          <span :aria-label="selected.online ? 'Online' : 'Offline'" :class="['bg-green-400', 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" />
-          <span class="ml-3 block truncate">{{ selected.name }}</span>
+          <span :aria-label="selected.online ? 'Online' : 'Offline'" :class="[selected.online  ? 'bg-green-400' : 'bg-gray-200', 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" />
+          <span class="ml-3 block truncate">{{ selected.online ? selected.name : "Connecting..."}}</span>
         </span>
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -40,7 +40,7 @@ import { ref , watch} from 'vue'
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-import { watchNetwork } from '@wagmi/core'
+import { watchNetwork , watchAccount} from '@wagmi/core'
 
 import { configureChains, createClient } from "@wagmi/core";
 
@@ -92,28 +92,66 @@ const web3modal = new Web3Modal(
   ethereumClient
 );
 
-async function switchTo(idChain){
-
+async function switchTo(idChain, selected){
   const network = await switchNetwork({
   chainId: idChain,
 })
+ selected.value.online = true
+
+
 }
 
 
 const people = [
-  { id: 1, name: 'Ethereum', online: true , chainId: 1},
-  { id: 2, name: 'Polygon', online: false, chainId:137 },
-  { id: 3, name: 'Mumbai', online: false, chainId:80001 },
-  { id: 4, name: 'Goerli', online: false, chainId:5 },
+  { id: 0, name: 'Ethereum', online: true , chainId: 1},
+  { id: 1, name: 'Polygon', online: false, chainId:137 },
+  { id: 2, name: 'Mumbai', online: false, chainId:80001 },
+  { id: 3, name: 'Goerli', online: false, chainId:5 },
 ]
 
 const selected = ref(people[0])
 
 watch(selected, async (currentValue, oldValue) => {
       console.log(currentValue);
-      switchTo(selected.value.chainId)
+      selected.value.online = false ; 
+      switchTo(selected.value.chainId, selected)
     });
 
+
+    const unwatchAccount = watchAccount((account) => 
+    {
+      console.log(account)
+      if(account.isDisconnected){
+        const router = useRouter();
+        router.push({ path: "/signin" });
+      console.log("time to leave")
+      }
+
+    }
+    
+    
+    
+    )
+
  
- const unwatch = watchNetwork((network) => console.log(network))
+ const unwatch = watchNetwork((network) => {
+  console.log(network)
+  // people.forEach(
+  //   item =>{
+  //     console.log("item ", item)
+  //     if(item.chainId === network.chain.id ){
+  //       console.log("there is a match")
+        
+  //       selected.value = people[item.id] ;
+  //       selected.value.online = true
+  //       return;
+  //     }
+  //   }
+  // )
+  // console.log("my filter is working .. ", item)
+
+  // // item.online = true
+  // // selected.value = item  
+  // console.log('this is id chain' , network.chain.id)
+  })
 </script>

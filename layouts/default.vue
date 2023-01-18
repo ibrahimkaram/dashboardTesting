@@ -32,7 +32,7 @@
               <transition enter-active-class="transition ease-out duration-200" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                 <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                    <NuxtLink :to="item.to" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</NuxtLink>
+                    <div @click="navigateToPage(item.id)" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</div>
                   </MenuItem>
                 </MenuItems>
               </transition>
@@ -71,7 +71,7 @@
             </button>
           </div>
           <div class="mt-3 space-y-1">
-            <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">{{ item.name }}</DisclosureButton>
+            <DisclosureButton v-for="item in userNavigation" :key="item.name" as="div" @click="navigateToPage(item.id)" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">{{ item.name }}</DisclosureButton>
           </div>
         </div>
       </DisclosurePanel>
@@ -86,6 +86,8 @@
 import { ref } from 'vue'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { disconnect } from '@wagmi/core'
+
 const tabId = ref(0)
 const user = {
   name: 'Luigi Cook',
@@ -101,14 +103,21 @@ const navigation = [
   { name: 'Collaborate', to: '/collaborate', current: false, id:4 },
 ]
 const userNavigation = [
-  { name: 'Your Profile', to: '/' },
-  { name: 'Settings', to: '/' },
-  { name: 'Sign out', to: '/signin' },
+  { name: 'Your Profile', to: '/', id:0 },
+  { name: 'Settings', to: '/' , id : 1},
+  { name: 'Sign out', to: '/' , id:3},
 ]
 
 function switchTabs(id){
   tabId.value = id;
   console.log("this switch happening")
 }
+async function navigateToPage(pageId) {
+  if(pageId === 3){
+    // TODO: Adding Disconnect IPA
+    await disconnect()
+  }
+}
+
 
 </script>

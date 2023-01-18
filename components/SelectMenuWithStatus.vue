@@ -73,7 +73,7 @@ const isConnected = ref(false)
 const projectId = "c4ebec790772322761f1607cb06c5db8"
 
 
-  const chains = [ mainnet, goerli, polygon, polygonMumbai];
+const chains = [ mainnet, goerli, polygon, polygonMumbai];
 
   // Wagmi Core Client
 const { provider } = configureChains(chains, [
@@ -124,13 +124,9 @@ watch(selected, async (currentValue, oldValue) => {
       if(account.isDisconnected){
         const router = useRouter();
         router.push({ path: "/signin" });
-      console.log("time to leave")
       }
 
     }
-    
-    
-    
     )
 
  

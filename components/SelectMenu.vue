@@ -1,6 +1,6 @@
 <template>
   <Listbox as="div" v-model="selected">
-    <ListboxLabel class="block text-sm font-medium text-gray-700">Network</ListboxLabel>
+    <ListboxLabel class="block text-sm font-medium text-gray-700"></ListboxLabel>
     <div class="relative mt-1">
       <ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
         <span class="flex items-center">

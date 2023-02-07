@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden bg-white shadow-lg sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg font-medium leading-6 text-gray-900">WedgeToken</h3>
+      <h3 class="text-lg font-medium leading-6 text-gray-900">{{ token.name }}</h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">Features, transaction history, and token holders.</p>
     </div>
     <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -12,15 +12,15 @@
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Total supply</dt>
-          <dd class="mt-1 text-sm text-gray-900">1,000,000</dd>
+          <dd class="mt-1 text-sm text-gray-900">{{ token.totalSupply }}</dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Balance</dt>
-          <dd class="mt-1 text-sm text-gray-900">199,000</dd>
+          <dd class="mt-1 text-sm text-gray-900">{{ token.totalSupply }}</dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Number of holders</dt>
-          <dd class="mt-1 text-sm text-gray-900">3</dd>
+          <dd class="mt-1 text-sm text-gray-900">1</dd>
         </div>
       </dl>
     </div>
@@ -29,6 +29,8 @@
 
 <script setup>
 import { PaperClipIcon } from '@heroicons/vue/20/solid'
+import { useTokensStore } from "../stores/tokenStore";
+const tokensStore = await useTokensStore()
+const token = tokensStore.currentToken
 
-const { tokenData, address } = defineProps(['tokenData', 'address'])
 </script>

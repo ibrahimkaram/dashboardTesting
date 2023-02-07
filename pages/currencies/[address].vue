@@ -1,6 +1,9 @@
 <template>
   <ClientOnly>
     <div class="min-h-full">
+      <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'"/>
+      <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
+      <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
       <div class="py-10">
         <header>
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -8,7 +11,7 @@
           </div>
         </header>
         <div class="p-10">
-          <TokenDetailCard :tokenData="tokenData" :address="address"/>
+          <TokenDetailCard/>
         </div>
         <div class="px-10">
           <div>
@@ -47,9 +50,18 @@
 import { ref } from 'vue'
 import { ArrowsRightLeftIcon, CodeBracketSquareIcon, UsersIcon } from '@heroicons/vue/20/solid'
 import TokenTransactions from "../../components/TokenTransactions";
-import Pagination from "../../components/Pagination";
-const { address } = useRoute().params
+import {useRoute} from "nuxt/app";
+import PopupDialog from "../../components/PopupDialog";
+import {useDialogStore} from "../../stores/dialogStore";
+import {useTokensStore} from "../../stores/tokenStore";
 
+const tokensStore = useTokensStore()
+const {address} = useRoute().params
+const currentToken = tokensStore.getToken(address)
+tokensStore.setCurrentToken(currentToken)
+const dialogs = useDialogStore().dialogs
+
+const open = ref(false)
 const tabId = ref(0)
 
 const pageName = 'Token Details'
@@ -58,21 +70,18 @@ const crumbs = [
   { name: 'Currencies', to: '/currencies', current: false },
   { name: 'Token Details', to: `${address}`, current: true },
 ]
-const { tokenData } = defineProps(['tokenData'])
+
 
 const tabs = [
   { name: 'Contract Features', id: 0, icon: CodeBracketSquareIcon, current: true },
-  { name: 'Transactions', id: 1, icon: ArrowsRightLeftIcon, current: false },
+  { name: 'Transaction History', id: 1, icon: ArrowsRightLeftIcon, current: false },
   { name: 'Token Holders', id: 2, icon: UsersIcon, current: false },
 ]
 
 function switchTabs(id){
-  tabId.value = id;
-
+  tabId.value = id; // set tab value
   console.log("this switch happening")
 }
-
-// const { transactions } = useFetch(getTransaction)
 
 </script>
 

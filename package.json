@@ -15,10 +15,15 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.13",
+    "@pinia/nuxt": "^0.4.6",
     "@wagmi/core": "^0.8.14",
     "@web3modal/ethereum": "^2.0.0-rc.2",
     "@web3modal/html": "^2.0.0-rc.2",
     "ethers": "^5.7.2",
+    "pinia": "^2.0.29",
     "vue3-lottie": "^2.4.0"
+  },
+  "overrides": {
+    "vue": "^3.2.0"
   }
 }

@@ -38,11 +38,93 @@
 </template>
 
 <script setup>
-const holders = [
+
+import {useTokensStore} from "../stores/tokenStore";
+import {ethers} from "ethers";
+import {erc20ABI} from "../assets/constants/abis";
+import {useProviderStore} from "../stores/providerStore";
+import {reactive} from "vue";
+const providerStore = useProviderStore();
+const provider = providerStore.provider;
+const { currentToken } = await useTokensStore();
+
+
+const contract = await getContact(currentToken.address)
+//
+console.log('contract =>', contract);
+console.log('currentToken.contract =>', currentToken.contract);
+const filter = contract.filters.Transaction
+const events = await contract.queryFilter('*')
+console.log('events:', events);
+async function getContact(address){
+  return new ethers.Contract(address, erc20ABI, provider)
+}
+
+let holders = reactive([])
+for(const event of events){
+  let fromAddress = event.args[0]
+  let toAddress = event.args[1]
+
+  let fromExists = holders.find(holder => holder.hash === fromAddress);
+  if(!fromExists) {
+    let balance = await contract.functions.balanceOf(fromAddress)
+    balance = parseInt(balance, 10) / (10 ** 18);
+    console.log('balance', balance)
+    let totalSupply = await contract.functions.totalSupply()
+    totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
+    const percent = ( balance.toString() / totalSupply.toString()) * 100
+    if(balance>0)holders.push(
+        { rank: '1', hash: fromAddress, amount: balance, percentage: percent}
+    )
+  }
+  let toExists = holders.find(holder => holder.hash === toAddress);
+  if (!toExists) {
+    let balance = await contract.balanceOf(toAddress)
+    balance = parseInt(balance, 10) / (10 ** 18);
+    console.log('balance', balance)
+    let totalSupply = await contract.functions.totalSupply()
+    totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
+    const percent = ( balance.toString() / totalSupply.toString()) * 100
+    if(balance>0)holders.push(
+        { rank: '1', hash: toAddress, amount: balance, percentage: `${percent}%`}
+    )
+  }
+}
+
+const holdersExample = [
   { rank: '1', hash: '0xb192f...7gdf6ec', amount: '199,000', percentage: '55%'},
   { rank: '2', hash: '0xfb65e...b8d1d48', amount: '98,000', percentage: '26%'},
   { rank: '3', hash: '0xb76ec...d791b19', amount: '73,000', percentage: '19%'},
 ]
+
+// const filter = {
+//   address: contractAddress,
+//   fromBlock: 0,
+//   toBlock: 'latest',
+//   topics: [
+//     contractInstance.interface.events.Transfer.topics[0]
+//   ]
+// };
+//
+// let tokenHolders = []
+//
+// contractInstance.provider.getPastEvents(filter)
+//     .then(events => {
+//       events.forEach(event => {
+//         let fromAddress = event.args._from
+//         let toAddress = event.args._to
+//         if (!tokenHolders.includes(fromAddress)) {
+//           tokenHolders.push(fromAddress)
+//         }
+//         if (!tokenHolders.includes(toAddress)) {
+//           tokenHolders.push(toAddress)
+//         }
+//       })
+//     })
+//     .then(() => {
+//       console.log('token holders:', tokenHolders)
+//     })
+
 </script>
 
 <style scoped>

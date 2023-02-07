@@ -19,17 +19,10 @@
       <div class="mt-12">
         <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
           <div class="sm:col-span-2">
-            <label for="phone-number" class="block text-sm font-medium text-gray-700">Burn To</label>
-            <div class="relative mt-1 rounded-md shadow-sm">
-              <div class="absolute inset-y-0 left-0 flex items-center">
-                <label for="country" class="sr-only">Country</label>
-                <select id="country" name="country" class="h-full rounded-md border-transparent bg-transparent py-0 pl-4 pr-8 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500">
-                  <option>WA</option>
-                  <option>EM</option>
-                  <option>PH</option>
-                </select>
-              </div>
-              <input type="text" name="phone-number" id="phone-number" autocomplete="tel" class="block w-full rounded-md border-gray-300 py-3 px-4 pl-20 focus:border-indigo-500 focus:ring-indigo-500" placeholder="+1 (555) 987-6543" />
+            <label for="wallet-address" class="block text-sm font-medium text-gray-700">Burn To</label>
+            <div class="mt-1 flex rounded-md shadow-sm">
+              <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">address:</span>
+              <input type="text" name="wallet-address" id="wallet-address" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0xf986...05e7a" />
             </div>
           </div>
           <div class="sm:col-span-2">

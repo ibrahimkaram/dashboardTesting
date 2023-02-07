@@ -1,6 +1,6 @@
 <template>
   <div class="pt-8 sm:flex sm:items-center sm:justify-between">
-    <h3 class="text-lg font-medium leading-6 text-gray-900">Recently Launched Currencies</h3>
+    <h3 class="text-lg font-medium leading-6 text-gray-900">{{ title }}</h3>
     <div>
       <div class="mt-3 sm:mt-0 sm:ml-4">
         <label for="mobile-search-candidate" class="sr-only">Search</label>
@@ -22,5 +22,6 @@
 </template>
 
 <script setup>
+defineProps(['title','description'])
 import {MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 </script>

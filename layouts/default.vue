@@ -86,7 +86,8 @@
 import { ref } from 'vue'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { disconnect } from '@wagmi/core'
+import { disconnect, } from '@wagmi/core'
+import {initClient} from "~/stores/providerStore";
 
 const tabId = ref(0)
 const user = {
@@ -108,16 +109,21 @@ const userNavigation = [
   { name: 'Sign out', to: '/' , id:3},
 ]
 
+initClient()
+
 function switchTabs(id){
   tabId.value = id;
   console.log("this switch happening")
 }
 async function navigateToPage(pageId) {
   if(pageId === 3){
-    // TODO: Adding Disconnect IPA
     await disconnect()
+    const router = useRouter();
+    router.push({ path: "/signin" });
   }
 }
+
+
 
 
 </script>

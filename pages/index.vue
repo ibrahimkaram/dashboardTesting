@@ -144,10 +144,11 @@ const crumbs = [
 import DropdownButton from "/components/DropdownButton";
 import EmptyTokenListState from "/components/EmptyTokenListState";
 
-import {ethers} from "ethers";
+import {ethers } from "ethers";
 import {erc20ABI} from "../assets/constants/abis";
 import { useTokensStore } from "../stores/tokenStore";
-import {useProviderStore} from "../stores/providerStore";
+import {initClient, useProviderStore} from "../stores/providerStore";
+import { getAccount } from '@wagmi/core'
 const tokensStore = useTokensStore()
 const currencies = tokensStore.currencies
 const nfts = tokensStore.nfts
@@ -155,7 +156,7 @@ const nfts = tokensStore.nfts
 let recentCurrencies = reactive([])
 let recentNFTs = reactive([])
 
-const walletAddress = '0xf986AB80D7bC2EF37bb8A6D536b7718218705e7a'
+const walletAddress = getAccount().address
 const network = 'goerli'
 let factoryAddress;
 switch (network) {
@@ -177,15 +178,17 @@ switch (network) {
 //     'goerli',
 //     'IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0'
 // )
+initClient()
 const providerStore = useProviderStore()
-const provider = providerStore.provider
+
+const provider = await providerStore.walletProvider
 
 const logs = await provider.getLogs({
   fromBlock: 0,
   toBlock: 'latest',
   address: factoryAddress, //goerli factory contract
 });
-console.log('logs from 1st filter:', logs)
+console.log('logs from 1st filter:', logs);
 
 const promises = logs.map(log => provider.getTransactionReceipt(log.transactionHash));
 const transactionReceipts = await Promise.all(promises);
@@ -219,6 +222,7 @@ const MAX_PAGE_SIZE = 5;
 async function extractDataFromLogs(logs) {
   let tokens = []
   for (const log of logs) {
+
     const transactionReceipt = await provider.getTransactionReceipt(log.transactionHash);
     const tx = await provider.getTransaction(log.transactionHash);
     console.log('this is tx:', tx)

@@ -44,9 +44,10 @@ import {watchNetwork, watchAccount, getNetwork, getAccount} from '@wagmi/core'
 
 
 import { switchNetwork } from '@wagmi/core'
+import {initClient} from "~/stores/providerStore";
 
 
-import {initClient, useMainStore} from "~/stores/web3store";
+
 
 
 
@@ -107,7 +108,6 @@ const selected = ref(people[0])
 
 const isMenuReady  = ref(false)
 
-const mainStore = useMainStore()
 
 
 function mapNetwork(chainindex) {
@@ -116,22 +116,18 @@ function mapNetwork(chainindex) {
     case 1 :
       id = 0 ;
       networkNameRef.value = "Ethereum";
-      mainStore.networkId  = "Ethereum";
       break ;
     case 137 :
       id =1 ;
       networkNameRef.value = "Polygon";
-      mainStore.networkId  = "Polygon";
       break  ;
     case 80001 :
       id =2 ;
       networkNameRef.value = "Mumbai";
-      mainStore.networkId  = "Mumbai";
       break  ;
     case 5 :
       id =3 ;
       networkNameRef.value = "Goerli";
-      mainStore.networkId  = "Goerli";
       break  ;
     default :
       id =0 ;

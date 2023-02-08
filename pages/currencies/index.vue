@@ -321,6 +321,18 @@ async function extractDataFromLogs(logs) {
   let currentQueueTokens = []
   for (const log of logs) {
     const transactionReceipt = await provider.getTransactionReceipt(log.transactionHash);
+    const tx = await provider.getTransaction(log.transactionHash);
+    console.log('this is tx:', tx)
+    const method = tx.data.toString().slice(0,10)
+    const canMint = tx.data.toString().slice(138, 202)
+    const canBurn = tx.data.toString().slice(202, 266)
+    console.log('this is tx: method = ', method)
+    console.log('this is tx: method = ', canMint)
+    console.log('this is tx: method = ', canBurn)
+    let isMintable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
+    let isBurnable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
+    console.log('isMintable = ', isMintable)
+    console.log('isBurnable = ', isBurnable)
     console.log('this is transactionReceipt:', transactionReceipt)
     if(transactionReceipt.from !== walletAddress){
       logs.splice(log.index, 1)

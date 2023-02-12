@@ -8,6 +8,9 @@
       </header>
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'" />
+          <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
+          <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
           <!-- Replace with your content -->
           <div class="px-4 py-8 sm:px-0">
             <div class="rounded-lg shadow-lg">
@@ -37,7 +40,7 @@
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.symbol }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
                           <td class="relative whitespace-nowrap py-4 pl-3 pr-4">
-                            <DropdownButton/>
+                            <DropdownButton :token="token" @click.stop=""/>
                           </td>
                         </tr>
                         </tbody>
@@ -103,7 +106,7 @@
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.symbol }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
                           <td class="relative whitespace-nowrap py-4 pl-3 pr-4">
-                            <DropdownButton/>
+                            <DropdownButton :token="token" @click.stop=""/>
                           </td>
                         </tr>
                         </tbody>
@@ -151,9 +154,19 @@
 
 import {navigateTo} from "nuxt/app";
 import { useTokensStore } from "/stores/tokenStore";
+import DropdownButton from "/components/DropdownButton";
+import EmptyTokenListState from "/components/EmptyTokenListState";
+import { reactive, onMounted } from 'vue'
+import {ethers, utils} from 'ethers';
+import {erc20ABI} from "/assets/constants/abis";
+import {useDialogStore} from "../../stores/dialogStore";
+import {useProviderStore} from "../../stores/providerStore";
+import {getAccount} from "@wagmi/core";
 
 const tokensStore = useTokensStore()
 const fullTokenList = tokensStore.currencies
+const dialogs = useDialogStore().dialogs
+const providerStore = useProviderStore()
 
 const pageName = 'Launched Currencies'
 const crumbs = [
@@ -161,13 +174,6 @@ const crumbs = [
   { name: 'Currencies', to: '/currencies', current: true },
 ]
 
-import DropdownButton from "/components/DropdownButton";
-import EmptyTokenListState from "/components/EmptyTokenListState";
-import { reactive, onMounted } from 'vue'
-import {ethers, utils} from 'ethers';
-import {erc20ABI} from "/assets/constants/abis";
-
-const walletAddress = '0xf986AB80D7bC2EF37bb8A6D536b7718218705e7a'
 const network = 'goerli'
 let factoryAddress;
 switch (network) {
@@ -184,23 +190,13 @@ switch (network) {
     throw new Error(`Unsupported network: ${network}`);
 }
 
-// const currencies = [
-//   { name: 'WedgeToken', totalSupply: '10000', dateCreated: '12 Nov 2022', role: 'Owner' },
-//   { name: 'IbrahimCoin', totalSupply: '1000000', dateCreated: '17 Dec 2021', role: 'Owner' },
-//   // More people...
-// ]
-
-
 let currentTokens = reactive([])
 
 // Connect to the Ethereum blockchain using a provider
-const provider = new ethers.providers.AlchemyProvider(
-    'goerli',
-    'IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0'
-)
-// srsk00fI6RMw5M0mpzdC3ayeFRMcqJGn :homestead
-// IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0 :goerli
-// 47sKRQ4eWFI0-6zKdakQAjfUY-BnQnVC :matic
+const provider = await providerStore.walletProvider
+const connectedAccount = await getAccount()
+const walletAddress = await connectedAccount.address
+console.log('provider.network = ', provider.network)
 
 console.log('we are about to get logs:')
 //let logs = null
@@ -237,7 +233,7 @@ async function getAddress(transactionReceipt) {
   return childAddress;
 }
 
-async function getContact(address){
+async function getContract(address){
   return new ethers.Contract(address, erc20ABI, provider)
 }
 
@@ -329,8 +325,8 @@ async function extractDataFromLogs(logs) {
     console.log('this is tx: method = ', method)
     console.log('this is tx: method = ', canMint)
     console.log('this is tx: method = ', canBurn)
-    let isMintable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
-    let isBurnable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
+    const isMintable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
+    const isBurnable = (canBurn === '0000000000000000000000000000000000000000000000000000000000000001')
     console.log('isMintable = ', isMintable)
     console.log('isBurnable = ', isBurnable)
     console.log('this is transactionReceipt:', transactionReceipt)
@@ -339,11 +335,17 @@ async function extractDataFromLogs(logs) {
     } else {
       const address = await getAddress(transactionReceipt, log)
       console.log('this is address: ', address)
-      const contract = await getContact(address)
+      const contract = await getContract(address)
       const tokenData = await getContractData(contract)
       let totalSupply = tokenData.totalSupply.toString();
       totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
-      currentQueueTokens.push({name: tokenData.name, symbol: tokenData.symbol, address: address, totalSupply: totalSupply, network: 'Goerli', type: 'ERC20'})
+      currentQueueTokens.push({
+        name: tokenData.name,
+        symbol: tokenData.symbol,
+        address: address, totalSupply: totalSupply,
+        network: 'Goerli',
+        type: 'ERC20', isMintable: isMintable, isBurnable: isBurnable
+      })
       console.log('token added: ', address)    }
 
   }

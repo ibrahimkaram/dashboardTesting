@@ -5,10 +5,12 @@
       <div class="relative mt-1">
         <ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-primary-blue focus:outline-none focus:ring-primary-blue focus:ring- sm:text-sm">
         <span class="flex items-center">
-          <span :aria-label="selected.online ? 'Online' : 'Offline'" :class="[selected.online  ? 'bg-green-400' : 'bg-gray-200', 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" />
-          <span class="ml-3 block truncate">
-            {{ selected.online ? networkNameRef : "Connecting..."}}
+          <span :aria-label=" !isConnecting ? 'Online' : 'Offline'" :class="[ !isConnecting ? 'bg-green-400' : 'bg-gray-200', 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" />
+          <ClientOnly>
+             <span class="ml-3 block truncate">
+            {{ isConnecting ? "Connecting..." :  mainStore.networkId }}
           </span>
+          </ClientOnly>
         </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -36,18 +38,28 @@
 
 <script setup>
 import { ref} from 'vue'
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
-import {  ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 import {watchNetwork, watchAccount, getNetwork, getAccount} from '@wagmi/core'
 
+import { configureChains, createClient } from "@wagmi/core";
+
+import { polygonMumbai, mainnet, polygon, goerli } from "@wagmi/core/chains";
+
+import { Web3Modal } from "@web3modal/html";
 
 
 import { switchNetwork } from '@wagmi/core'
-import {initClient} from "~/stores/providerStore";
+import { initClient } from "~/stores/providerStore";
 
+import { useProviderStore } from "~/stores/providerStore";
 
-
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
 
 
 
@@ -78,78 +90,90 @@ const unwatchAccount = watchAccount((account) =>
 
 
 async function switchTo(idChain){
-  const network = await switchNetwork({
-    chainId: idChain,
-  })
+  try{
+    const network = await switchNetwork({
+      chainId: idChain,
+    })
+  }catch (e){
+    isConnecting.value = false;
+  }
+
 }
 
 
 const people = [
-  { id: 0, name: 'Ethereum', online: true , chainId: 1},
-  { id: 1, name: 'Polygon', online: false, chainId:137 },
-  { id: 2, name: 'Mumbai', online: false, chainId:80001 },
-  { id: 3, name: 'Goerli', online: false, chainId:5 },
+  { id: 0, name: 'Ethereum', chainId: 1},
+  { id: 1, name: 'Polygon',  chainId:137 },
+  { id: 2, name: 'Mumbai',  chainId:80001 },
+  { id: 3, name: 'Goerli' ,  chainId:5 },
 ]
 
-const networkNameRef = useState('networkNameRef');
+const mynetworkName = useState('mynetworkName');
+const isConnecting = useState("isConnecting");
+
 
 async function updateNetwork(e){
-  selected.value.online = false ;
-  let cashedValue = networkNameRef.value ;
-  try {
-    await switchTo(e.chainId) ;
-  }catch (e) {
-    networkNameRef.value = cashedValue;
+  if(e.name === mynetworkName.value){
+    return;
   }
-
+  isConnecting.value = true;
+  await switchTo(e.chainId) ;
 }
 
 const selected = ref(people[0])
 
 const isMenuReady  = ref(false)
 
+const mainStore = useProviderStore()
 
 
 function mapNetwork(chainindex) {
-  let id = 0;
+  isConnecting.value = false ;
+  console.log("change is done you are in  chain id : " , chainindex);
   switch (chainindex) {
     case 1 :
-      id = 0 ;
-      networkNameRef.value = "Ethereum";
+
+      mynetworkName.value = "Ethereum";
+      mainStore.networkId  = "Ethereum";
       break ;
     case 137 :
-      id =1 ;
-      networkNameRef.value = "Polygon";
+
+      mynetworkName.value = "Polygon";
+      mainStore.networkId  = "Polygon";
       break  ;
     case 80001 :
-      id =2 ;
-      networkNameRef.value = "Mumbai";
+
+      mynetworkName.value = "Mumbai";
+      mainStore.networkId  = "Mumbai";
       break  ;
     case 5 :
-      id =3 ;
-      networkNameRef.value = "Goerli";
+
+      mynetworkName.value = "Goerli";
+      mainStore.networkId  = "Goerli";
       break  ;
     default :
-      id =0 ;
-      networkNameRef.value = "ETH";
+      mynetworkName.value = "Unsupported";
+      mainStore.networkId = "Unsupported";
       break ;
   }
 
-
-  selected.value = people[id];
-  selected.value.online = true;
-  console.log("selected should be :  ", selected.value)
 }
 
-const unwatch = watchNetwork((network) => {
 
-  mapNetwork(network.chain.id);
+const unwatch = watchNetwork(async (network) => {
+
+  var delayInMilliseconds = 500; //1 second
+  setTimeout(async function () {
+    const {chain} = await getNetwork()
+    mapNetwork(chain.id);
+  }, delayInMilliseconds);
+
 })
 
 onMounted(async () => {
 
   try {
-
+    isConnecting.value = false;
     const account = await getAccount()
     const {chain} = await getNetwork()
     mapNetwork(chain.id);

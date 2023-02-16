@@ -11,6 +11,7 @@ import {erc20ABI} from "assets/constants/abis";
 export const useProviderStore = defineStore('provider', {
     state: () => ({
         network: 'goerli',
+        networkId : "" ,
         apiKey: 'IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0',
     }),
     getters: {

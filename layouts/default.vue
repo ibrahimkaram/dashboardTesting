@@ -91,7 +91,8 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { disconnect } from '@wagmi/core'
+import { disconnect, } from '@wagmi/core'
+import {initClient} from "~/stores/providerStore";
 import {useNavStore} from "../stores/navStore";
 import {ref} from "vue";
 
@@ -106,7 +107,7 @@ const user = {
 }
 const navigation = [
   { name: 'Overview', to: '/', current: false, id:0 },
-  { name: 'Currencies', to: '/currencies', current: true, id:1 },
+  { name: 'Currencies', to: '/currencies', current: false, id:1 },
   { name: 'NFTs', to: '/nfts', current: false, id:2 },
   { name: 'Launchpad', to: '/launchpad', current: false, id:3 },
   { name: 'Collaborate', to: '/collaborate', current: false, id:4 },
@@ -117,6 +118,8 @@ const userNavigation = [
   { name: 'Sign out', to: '/' , id:3},
 ]
 
+initClient()
+
 function switchTabs(id){
   navStore.setPageId(id)
   console.log("this switch happening")
@@ -124,10 +127,13 @@ function switchTabs(id){
 }
 async function navigateToPage(pageId) {
   if(pageId === 3){
-    // TODO: Adding Disconnect IPA
     await disconnect()
+    const router = useRouter();
+    router.push({ path: "/signin" });
   }
 }
+
+
 
 
 </script>

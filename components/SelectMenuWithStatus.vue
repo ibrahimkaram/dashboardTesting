@@ -3,7 +3,7 @@
     <Listbox  :model-value="selected"  as="div"  @update:model-value="updateNetwork($event)" class="w-40">
 
       <div class="relative mt-1">
-        <ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-primary-blue focus:outline-none focus:ring-primary-blue focus:ring- sm:text-sm">
+        <ListboxButton class=" isConnecting:cursor-progress relative w-full hover:cursor-pointer rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-primary-blue focus:outline-none focus:ring-primary-blue focus:ring- sm:text-sm ">
         <span class="flex items-center">
           <span :aria-label=" !isConnecting ? 'Online' : 'Offline'" :class="[ !isConnecting ? 'bg-green-400' : 'bg-gray-200', 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" />
           <ClientOnly>

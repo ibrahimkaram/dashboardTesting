@@ -8,9 +8,9 @@
       </header>
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'" />
-          <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
-          <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
+          <PopupDialog v-if="dialogs.get('send')?.open" :dialog="'send'" />
+          <PopupDialog v-if="dialogs.get('mint')?.open" :dialog="'mint'"/>
+          <PopupDialog v-if="dialogs.get('burn')?.open" :dialog="'burn'"/>
           <!-- Replace with your content -->
           <div class="px-4 py-8 sm:px-0">
             <div class="rounded-lg shadow-lg">
@@ -141,7 +141,7 @@ console.log('provider.network = ', provider.network)
 
 const factoryInstance = new ethers.Contract(factoryAddress, erc20FactoryABI, provider);
 let logs = await factoryInstance.queryFilter('Created');
-console.log('events:', logs)
+console.log('events:', logs);
 
 const filteredLogs = logs.filter((_, index) => logs[index].args._fromAddress === walletAddress);
 console.log('filtered events:', filteredLogs)
@@ -263,6 +263,7 @@ async function extractDataFromLogs(logs) {
   console.log('extractedTokens: ', extractedTokens);
   const shortenedList = extractedTokens.slice(0, MAX_PAGE_SIZE)
   currentTokens.splice(0, currentTokens.length, ...shortenedList);
+  await tokensStore.clearCurrencyCache()
   for(const token of extractedTokens){
     await tokensStore.addCurrency(token)
   }

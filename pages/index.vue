@@ -8,9 +8,9 @@
       </header>
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'" />
-          <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
-          <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
+          <PopupDialog v-if="dialogs.get('send')?.open" :dialog="'send'" />
+          <PopupDialog v-if="dialogs.get('mint')?.open" :dialog="'mint'"/>
+          <PopupDialog v-if="dialogs.get('burn')?.open" :dialog="'burn'"/>
           <!-- Start of Currencies -->
           <div class="px-4 py-8 sm:px-0">
             <div class="rounded-lg shadow-lg">

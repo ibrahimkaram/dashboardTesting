@@ -45,7 +45,9 @@ import {
   ScaleIcon,
   ChatBubbleLeftRightIcon,
 } from '@heroicons/vue/24/outline'
-
+import {useNavStore} from "../stores/navStore";
+const navStore = useNavStore()
+navStore.setPageId(3)
 const items = [
   {
     title: 'Create a Currency',

@@ -1,7 +1,8 @@
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
     <div>
-      <DefaultListHeader/>
+      <DefaultListHeader :title="'Coming soon!'"/>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">NFTs are currently under construction. See cool examples ;)</p>
     </div>
     <ul role="list" class="pt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="person in people" :key="person.email" class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">

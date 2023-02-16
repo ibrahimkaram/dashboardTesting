@@ -12,14 +12,25 @@
       <div class="text-center">
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Send</h2>
       </div>
-      <AmountInput class="pt-8"/>
+      <div class="pt-8">
+        <!--    <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>-->
+        <div class="relative mt-1 rounded-md shadow-sm">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="text-gray-500 sm:text-sm">$</span>
+          </div>
+          <input type="text" name="amount" id="amount" v-model="useDialogStore().amount" class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0.00" aria-describedby="amount-currency" />
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <span class="text-gray-500 sm:text-sm" id="amount-currency">{{ currentToken.symbol }}</span>
+          </div>
+        </div>
+      </div>
       <div class="mt-12">
         <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
           <div class="sm:col-span-2">
             <label for="wallet-address" class="block text-sm font-medium text-gray-700">Send To</label>
             <div class="mt-1 flex rounded-md shadow-sm">
               <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">address:</span>
-              <input type="text" name="wallet-address" id="wallet-address" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0xf986...05e7a" />
+              <input type="text" name="wallet-address" id="wallet-address" v-model="useDialogStore().address" placeholder="0xf986...05e7a" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
             </div>
           </div>
           <div class="sm:col-span-2">
@@ -58,6 +69,8 @@
 <script setup>
 import { ref } from 'vue'
 import { Switch } from '@headlessui/vue'
-
+import {useDialogStore} from "../stores/dialogStore";
+import {useTokensStore} from "../stores/tokenStore";
+const currentToken = await useTokensStore().currentToken
 const agreed = ref(false)
 </script>

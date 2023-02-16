@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-full">
+
     <Disclosure as="nav" class="border-b border-gray-200 bg-white" v-slot="{ open }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
@@ -8,9 +9,11 @@
               <img class="block h-8 w-auto lg:hidden" src="../assets/images/osis-icon.svg" alt="Your Company" />
               <img class="hidden h-8 w-auto lg:block" src="../assets/images/osis-icon.svg" alt="Your Company" />
             </div>
+            <ClientOnly>
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-              <NuxtLink v-for="item in navigation" :key="item.name" @click="switchTabs(item.id)" :to="item.to" :class="[tabId===item.id ? 'border-primary-blue text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="tabId===item.id ? 'page' : undefined">{{ item.name }}</NuxtLink>
+              <NuxtLink v-for="item in navigation" :key="item.name" @click="switchTabs(item.id)" :to="item.to" :class="[useNavStore().pageId===item.id ? 'border-primary-blue text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium']" :aria-current="useNavStore().pageId===item.id ? 'page' : undefined">{{ item.name }}</NuxtLink>
             </div>
+            </ClientOnly>
           </div>
           <div class="hidden sm:ml-6 sm:flex sm:items-center">
             <div class="mr-4">
@@ -53,9 +56,11 @@
       </div>
 
       <DisclosurePanel class="sm:hidden">
+        <ClientOnly>
         <div class="space-y-1 pt-2 pb-3">
-          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800', 'block pl-3 pr-4 py-2 border-l-4 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :class="[useNavStore().pageId===item.id ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800', 'block pl-3 pr-4 py-2 border-l-4 text-base font-medium']" :aria-current="useNavStore().pageId===item.id ? 'page' : undefined">{{ item.name }}</DisclosureButton>
         </div>
+        </ClientOnly>
         <div class="border-t border-gray-200 pt-4 pb-3">
           <div class="flex items-center px-4">
             <div class="flex-shrink-0">
@@ -76,6 +81,7 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
+
     <div>
       <slot/>
     </div>
@@ -83,12 +89,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { disconnect } from '@wagmi/core'
+import {useNavStore} from "../stores/navStore";
+import {ref} from "vue";
 
-const tabId = ref(0)
+const navStore = await useNavStore()
+console.log('useNavStore().pageId => ',useNavStore().pageId)
+
 const user = {
   name: 'Luigi Cook',
   email: 'luigi@example.com',
@@ -96,8 +105,8 @@ const user = {
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Overview', to: '/', current: true, id:0 },
-  { name: 'Currencies', to: '/currencies', current: false, id:1 },
+  { name: 'Overview', to: '/', current: false, id:0 },
+  { name: 'Currencies', to: '/currencies', current: true, id:1 },
   { name: 'NFTs', to: '/nfts', current: false, id:2 },
   { name: 'Launchpad', to: '/launchpad', current: false, id:3 },
   { name: 'Collaborate', to: '/collaborate', current: false, id:4 },
@@ -109,8 +118,9 @@ const userNavigation = [
 ]
 
 function switchTabs(id){
-  tabId.value = id;
+  navStore.setPageId(id)
   console.log("this switch happening")
+  console.log('useNavStore().pageId => ',useNavStore().pageId)
 }
 async function navigateToPage(pageId) {
   if(pageId === 3){

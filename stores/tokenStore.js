@@ -1,36 +1,34 @@
 
 import { defineStore } from 'pinia'
+import {ethers} from "ethers";
+import {erc20ABI} from "assets/constants/abis";
+import {useSessionStorage} from "@vueuse/core/index";
+import {alreadyExists} from "assets/constants/util";
 
-// You can name the return value of `defineStore()` anything you want,
-// but it's best to use the name of the store and surround it with `use`
-// and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
-// the first argument is a unique id of the store across your application
+// let currencyState = [];
+// if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('currencies')) {
+//     currencyState = useSessionStorage('currencies', [])
+// }
 export const useTokensStore = defineStore('tokens', {
     state: () => ({
-        currencies: [], // array of tokens
+        currencies: useSessionStorage('currencies', []), // array of tokens
         nfts: [], // array of tokens
-        currentToken: null,
+        currentToken: {},
+        tokenHolders: [],
     }),
-    // getters: {
-    //     recentCurrencies(){
-    //         return this.currencies.slice(0, 3);
-    //     }
-    // },
+    getters: {
+    },
     actions: {
-        async getCurrencies(){
-            const data = ['coolToken']
-            data.push('anotherToken')
-            this.currencies = data
-        },
-        async getNfts(){
-            //const nfts = await
+        async getCurrentContract(provider) {
+            return new ethers.Contract(this.currentToken.address, erc20ABI, provider);
         },
         async addCurrency(token){
-            const exists = this.currencies.find(p => p.address === token.address)
-            if(!exists){
-                this.currencies.push({...token, isTrash: false})
+            const index = this.currencies.findIndex(p => p.address === token.address)
+            if(index === alreadyExists){
+                this.currencies.push(token)
             }else {
                 console.log('this has already been cached')
+                this.currencies[index] = token;
             }
         },
         getToken(address){
@@ -38,6 +36,15 @@ export const useTokensStore = defineStore('tokens', {
         },
         setCurrentToken(token) {
             this.currentToken = token;
+        },
+        async clearCurrencyCache(){
+            this.currencies.splice(0, this.currencies.length);
+            console.log('this.currencies after clearing = ', this.currencies)
         }
+    },
+    hydrate(state, initialState) {
+        // in this case we can completely ignore the initial state since we
+        // want to read the value from the browser
+        state.currencies = useSessionStorage('currencies', [])
     },
 })

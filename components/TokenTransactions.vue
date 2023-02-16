@@ -44,17 +44,18 @@
         </div>
       </div>
     </div>
-    <Pagination/>
+    <Pagination :start="0" :end="transactions.length" :totalResults="transactions.length"/>
   </div>
 </template>
 
 <script setup>
 
 import {useTokensStore} from "../stores/tokenStore";
-import {ethers} from "ethers";
+import {BigNumber, ethers, utils} from "ethers";
 import {erc20ABI} from "../assets/constants/abis";
 import {useProviderStore} from "../stores/providerStore";
 import {reactive} from "vue";
+import moment from "moment";
 const providerStore = useProviderStore();
 const provider = providerStore.provider;
 const { currentToken } = await useTokensStore();
@@ -73,55 +74,46 @@ async function getContact(address){
 
 let transactions = reactive([])
 for(const event of events){
-  const shortHash = `${event.transactionHash.slice(0,6)}...${event.transactionHash.slice(6,13)}`
+  const tx = await provider.getTransaction(event.transactionHash)
+  const receipt = await provider.getTransactionReceipt(event.transactionHash)
+  console.log('tx', tx)
+  const iFace = new ethers.utils.Interface(erc20ABI);
+  try{
+    const parsedTx = iFace.parseTransaction(tx);
+    console.log('parsedTx', parsedTx)
+    await logEventAsTransaction(receipt, parsedTx.name, parsedTx.args[0])
+  }catch (e) {
+    console.log(e)
+  }
+}
+transactions.reverse();
+
+async function logEventAsTransaction(receipt, txName, to) {
+  const shortHash = `${receipt.transactionHash.slice(0,6)}...${receipt.transactionHash.slice(6,13)}`
+  console.log('receipt', receipt)
+  const block = await provider.getBlock(receipt.blockHash);
+  console.log('block', block)
+
+  const recipient = `${to.slice(0, 6)}...${to.slice(6, 13)}`
+
+  let weiValue;
+  if (receipt.logs.length > 1) {
+    weiValue = parseInt(receipt.logs[1].data, 16);
+  } else {
+    weiValue = parseInt(receipt.logs[0].data, 16);
+  }
+
+  const quantity = (weiValue / 1e18).toString();
+  console.log('quantity=', quantity);  // Output: 10
+
+  const dateTime = moment.unix(block.timestamp).format('DD MMM YYYY, hh:mm A');
+  console.log('dateTime=', dateTime);  // Output: 10 Feb 2023, 08:06 AM
+
   const transaction = {
-    hash: shortHash, type: event.event, amount: '100', recipient: '0xd482...78858', timestamp: '12 Nov 2022, 08:44 AM'
+    hash: shortHash, type: txName, amount: `${quantity}`, recipient: recipient, timestamp: `${dateTime}`
   }
   transactions.push(transaction)
 }
-
-// const logs = await provider.getLogs({
-//   fromBlock: 0,
-//   toBlock: 'latest',
-//   address: currentToken.address, //goerli factory contract
-// });
-// console.log('logs from 1st filter:', logs)
-// const promises = logs.map(log => provider.getTransactionReceipt(log.transactionHash));
-// const transactionReceipts = await Promise.all(promises);
-// console.log('transactionReceipts', transactionReceipts)
-//
-// for(const receipt of transactionReceipts){
-//   const tx = await provider.getTransaction(receipt.transactionHash);
-//   console.log('tx',tx)
-// }
-
-
-
-
-transactions.push(...[
-  { hash: '0xb76ec...d791b19', type: 'Mint', amount: '10,000', recipient: '0xd482...78858', timestamp: '12 Nov 2022, 07:05 AM'},
-  { hash: '0xf192f...f192f48', type: 'Transfer', amount: '1000', recipient: '0xd482...78858', timestamp: '12 Nov 2022, 04:49 AM'},
-  { hash: '0xb192f...b7fb65e', type: 'Burn', amount: '100', recipient: '0xd482...78858', timestamp: '12 Nov 2022, 01:57 AM'},
-])
-
-
-
-// Assuming you have the contract instance and contract address
-
-// async function getTransactionHistory(contract) {
-//   const events = await contract.getPastEvents({fromBlock: 0, toBlock: 'latest'});
-//   console.log('events:', events);
-//
-//   return events.map((event) => {
-//     return {
-//       from: event.returnValues.from,
-//       to: event.returnValues.to,
-//       value: event.returnValues.value
-//     }
-//   });
-// }
-// const transactionHistory = await getTransactionHistory(contract);
-// console.log('Transaction history:', transactionHistory);
 
 </script>
 

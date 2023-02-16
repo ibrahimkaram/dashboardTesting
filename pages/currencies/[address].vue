@@ -55,10 +55,13 @@ import PopupDialog from "../../components/PopupDialog";
 import {useDialogStore} from "../../stores/dialogStore";
 import {useTokensStore} from "../../stores/tokenStore";
 
-const tokensStore = useTokensStore()
+const tokensStore = await useTokensStore()
 const {address} = useRoute().params
-const currentToken = tokensStore.getToken(address)
-tokensStore.setCurrentToken(currentToken)
+const currentToken = await tokensStore.getToken(address)
+console.log('this it what is being used to set address =>', address)
+console.log('this it what is being used for token List =>', tokensStore.currencies)
+console.log('this it what is being used to set currentToken =>', currentToken)
+await tokensStore.setCurrentToken(currentToken)
 const dialogs = useDialogStore().dialogs
 
 const open = ref(false)

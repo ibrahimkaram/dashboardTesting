@@ -8,7 +8,10 @@
       </header>
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <!-- Replace with your content -->
+          <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'" />
+          <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
+          <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
+          <!-- Start of Currencies -->
           <div class="px-4 py-8 sm:px-0">
             <div class="rounded-lg shadow-lg">
               <div class="px-4 sm:px-6 lg:px-8">
@@ -37,30 +40,47 @@
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.symbol }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
                           <td class="relative whitespace-nowrap py-4 pl-3 pr-4">
-                            <DropdownButton @click.stop=""/>
+                            <DropdownButton :token="token" @click.stop=""/>
                           </td>
                         </tr>
                         </tbody>
                       </table>
                     </div>
-                    <div v-if="recentCurrencies.length===0">
-                      <EmptyTokenListState/>
+                    <div v-if="recentCurrencies.length===0" class="pb-4">
+                      <div class="text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No currencies launched on this network</h3>
+                        <p class="mt-1 text-sm text-gray-500">Try switching networks or get started by creating a new currency.</p>
+                        <div class="mt-6">
+                          <NuxtLink to="/launchpad"
+                              type="button" class="inline-flex items-center rounded-full border border-transparent
+                              bg-primary-blue px-5 pr-7 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75
+                              focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                            New Currency
+                          </NuxtLink>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="pb-6">
-                  <NuxtLink
+                <div class="py-6">
+                  <NuxtLink v-if="currencies.length > 0"
                       to="/currencies"
                       type="button"
                       class="inline-flex items-center rounded-full border border-transparent
-                    bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700
+                    bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75
                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">See all tokens ({{ currencies.length }})
                   </NuxtLink>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Replace with your content -->
+          <!-- End of Currencies -->
+
+          <!-- Start of NFTs -->
           <div class="px-4 py-8 sm:px-0">
             <div class="rounded-lg shadow-lg">
               <div class="px-4 sm:px-6 lg:px-8">
@@ -89,44 +109,27 @@
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.symbol }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
                           <td class="relative whitespace-nowrap py-4 pl-3 pr-4">
-                            <DropdownButton/>
+
                           </td>
                         </tr>
                         </tbody>
                       </table>
                     </div>
-                    <div v-if="recentNFTs.length===0">
-                      <EmptyTokenListState/>
+                  </div>
+                  <div v-if="recentNFTs.length===0">
+                    <div class="text-center pt-12 pb-16">
+                      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                      </svg>
+                      <h3 class="mt-2 text-sm font-medium text-gray-900">No NFTs</h3>
+                      <p class="mt-1 text-sm text-gray-500">Get started by creating a new project.</p>
                     </div>
                   </div>
                 </div>
-                <nav v-if="recentNFTs.length!==0" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
-                  <div class="hidden sm:block">
-                    <p class="text-sm text-gray-700">
-                      Showing
-                      {{ ' ' }}
-                      <span class="font-medium">{{ 1 }}</span>
-                      {{ ' ' }}
-                      to
-                      {{ ' ' }}
-                      <span class="font-medium">{{ 5 }}</span>
-                      {{ ' ' }}
-                      of
-                      {{ ' ' }}
-                      <span class="font-medium">{{ recentNFTs.length }}</span>
-                      {{ ' ' }}
-                      results
-                    </p>
-                  </div>
-                  <div class="flex flex-1 justify-between sm:justify-end">
-                    <button @click="previous" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
-                    <button @click="next" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</button>
-                  </div>
-                </nav>
               </div>
             </div>
           </div>
-          <!-- /End replace -->
+          <!-- End of NFTs -->
         </div>
       </main>
     </div>
@@ -134,21 +137,28 @@
 </template>
 
 <script setup>
+import { PlusIcon } from '@heroicons/vue/20/solid'
 import {onMounted, reactive} from "vue";
 import {navigateTo} from "nuxt/app";
 
+const navStore = useNavStore()
 const pageName = 'Token Dashboard'
 const crumbs = [
   // { name: 'Overview', to: '/', current: true },
 ]
+navStore.setPageId(0)
 import DropdownButton from "/components/DropdownButton";
 import EmptyTokenListState from "/components/EmptyTokenListState";
 
 import {ethers } from "ethers";
-import {erc20ABI} from "../assets/constants/abis";
+import {erc20ABI, erc20FactoryABI} from "../assets/constants/abis";
 import { useTokensStore } from "../stores/tokenStore";
 import {initClient, useProviderStore} from "../stores/providerStore";
 import { getAccount } from '@wagmi/core'
+import {useNavStore} from "../stores/navStore";
+import {useDialogStore} from "../stores/dialogStore";
+const providerStore = useProviderStore()
+const dialogs = useDialogStore().dialogs
 const tokensStore = useTokensStore()
 const currencies = tokensStore.currencies
 const nfts = tokensStore.nfts
@@ -156,119 +166,70 @@ const nfts = tokensStore.nfts
 let recentCurrencies = reactive([])
 let recentNFTs = reactive([])
 
-const walletAddress = getAccount().address
-const network = 'goerli'
-let factoryAddress;
-switch (network) {
-  case 'goerli':
-    factoryAddress = '0x14deE550016F74A7fdda9d6e3976aee616AEA1E6'; // goerli-factory
-    break;
-  case 'polygon':
-    factoryAddress = '0xda196CF836c18962d21588700EE94f077E6032bf'; // polygon-factory
-    break;
-  case 'mainnet':
-    factoryAddress = '0x23E50E5322ca7c5E6dDd81730d1bb2B1bcD7Ea19'; // mainnet-factory
-    break;
-  default:
-    throw new Error(`Unsupported network: ${network}`);
-}
-
-// Connect to the Ethereum blockchain using a provider
-// const provider = new ethers.providers.AlchemyProvider(
-//     'goerli',
-//     'IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0'
-// )
 initClient()
-const providerStore = useProviderStore()
 
+let factoryAddress = providerStore.erc20Factory
+// Connect to the Ethereum blockchain using a provider
 const provider = await providerStore.walletProvider
+const connectedAccount = await getAccount()
+const walletAddress = await connectedAccount.address
+console.log('walletAddress:', walletAddress)
+console.log('provider.network = ', provider.network)
 
-const logs = await provider.getLogs({
-  fromBlock: 0,
-  toBlock: 'latest',
-  address: factoryAddress, //goerli factory contract
-});
-console.log('logs from 1st filter:', logs);
+const factoryInstance = new ethers.Contract(factoryAddress, erc20FactoryABI, provider);
+let logs = await factoryInstance.queryFilter('Created');
+console.log('events:', logs)
 
-const promises = logs.map(log => provider.getTransactionReceipt(log.transactionHash));
-const transactionReceipts = await Promise.all(promises);
-const filteredLogs = logs.filter((_, index) => transactionReceipts[index].from === walletAddress);
-console.log('logs from 2nd filter:', filteredLogs)
+const filteredLogs = logs.filter((_, index) => logs[index].args._fromAddress === walletAddress);
+console.log('filtered events:', filteredLogs)
+
 logs.splice(0, logs.length, ...filteredLogs)
+let totalResults = logs.length
 
-async function getAddress(transactionReceipt) {
-  let childAddress = null;
-  for(const log of transactionReceipt.logs){
-    if(log.address !== "0x0000000000000000000000000000000000001010" &&
-        log.address !== factoryAddress // ignore factory
-    ){
-      childAddress = log.address;
-    }
-  }
-  return childAddress;
-}
 
-async function getContact(address){
-  return new ethers.Contract(address, erc20ABI, provider)
-}
-
-function next(){
-}
-function previous(){
-}
 
 const MAX_PAGE_SIZE = 5;
 
 async function extractDataFromLogs(logs) {
-  let tokens = []
+  let extractedTokens = []
   for (const log of logs) {
+    console.log('decoded-log.args:', log.args)
+    const name = log.args._token[0]
+    const symbol = log.args._token[1]
+    const initSupply = log.args._token[2]
+    const isBurnable = log.args._token[4]
+    const isMintable = log.args._token[5]
+    const address = log.args._token[6]
 
-    const transactionReceipt = await provider.getTransactionReceipt(log.transactionHash);
-    const tx = await provider.getTransaction(log.transactionHash);
-    console.log('this is tx:', tx)
-    const method = tx.data.toString().slice(0,10)
-    const canMint = tx.data.toString().slice(138, 202)
-    const canBurn = tx.data.toString().slice(202, 266)
-    console.log('this is tx: method = ', method)
-    console.log('this is tx: method = ', canMint)
-    console.log('this is tx: method = ', canBurn)
-    let isMintable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
-    let isBurnable = (canMint === '0000000000000000000000000000000000000000000000000000000000000001')
-    console.log('isMintable = ', isMintable)
-    console.log('isBurnable = ', isBurnable)
-
-    console.log('this is transactionReceipt:', transactionReceipt)
-    if(transactionReceipt.from === walletAddress){
-      const address = await getAddress(transactionReceipt, log)
-      console.log('this is address: ', address)
-      const contract = await getContact(address)
-      const tokenData = await getContractData(contract)
-      let totalSupply = tokenData.totalSupply.toString();
+    let totalSupply = initSupply
+    if(isBurnable || isMintable){
+      const contract = await providerStore.getContract(address)
+      totalSupply = (await contract.totalSupply()).toString();
       totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
-      tokens.push({
-        name: tokenData.name, symbol: tokenData.symbol,
-        address: address, totalSupply: totalSupply, contract: contract,
-        network: 'Goerli', type: 'ERC20'
-      })
-      console.log('token added: ', address)
     }
-    if(tokens.length === MAX_PAGE_SIZE){ break; }
+    extractedTokens.push({
+      name: name,
+      symbol: symbol,
+      address: address,
+      totalSupply: totalSupply,
+      network: providerStore.network,
+      type: 'ERC20',
+      isMintable: isMintable,
+      isBurnable: isBurnable,
+      blockNumber: log.blockNumber
+    })
+    console.log('token added: ', address)
   }
-  for(const token of tokens){
+  console.log('extractedTokens: ', extractedTokens);
+  const shortenedList = extractedTokens.slice(0, MAX_PAGE_SIZE)
+  recentCurrencies.splice(0, recentCurrencies.length, ...shortenedList);
+  await tokensStore.clearCurrencyCache()
+  for(const token of extractedTokens){
     await tokensStore.addCurrency(token)
   }
-  recentCurrencies.push(...currencies.slice(0,3))
 }
 
 
-async function getContractData(contract){
-  const [name, symbol, totalSupply] = await Promise.all([
-    contract.functions.name(),
-    contract.functions.symbol(),
-    contract.functions.totalSupply()
-  ])
-  return {name: name[0], symbol: symbol[0], totalSupply: totalSupply[0]}
-}
 
 function navigateToPage(address) {
   navigateTo(`/currencies/${address}`)

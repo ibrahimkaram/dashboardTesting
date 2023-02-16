@@ -4,5 +4,6 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         'nuxt-headlessui',
         '@pinia/nuxt',
+        '@vueuse/nuxt',
     ]
 })

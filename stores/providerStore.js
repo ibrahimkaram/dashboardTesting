@@ -2,10 +2,12 @@ import { defineStore } from 'pinia'
 import {ethers} from "ethers";
 
 import {goerli, mainnet, polygon, polygonMumbai} from "@wagmi/core/chains";
-import {configureChains, createClient, fetchSigner, getProvider} from "@wagmi/core";
+import {configureChains, createClient, fetchSigner, getProvider, normalizeChainId} from "@wagmi/core";
 import {modalConnectors, walletConnectProvider} from "@web3modal/ethereum";
 import {factoryAddresses} from "assets/constants/factories";
 import {erc20ABI} from "assets/constants/abis";
+
+
 
 
 export const useProviderStore = defineStore('provider', {
@@ -34,7 +36,7 @@ export const useProviderStore = defineStore('provider', {
     actions: {
         async getContract(address){
             return new ethers.Contract(address, erc20ABI, this.walletProvider)
-        }
+        },
     }
 });
 

@@ -154,9 +154,10 @@ import {ethers } from "ethers";
 import {erc20ABI, erc20FactoryABI} from "../assets/constants/abis";
 import { useTokensStore } from "../stores/tokenStore";
 import {initClient, useProviderStore} from "../stores/providerStore";
-import { getAccount } from '@wagmi/core'
+import {getAccount, watchNetwork} from '@wagmi/core'
 import {useNavStore} from "../stores/navStore";
 import {useDialogStore} from "../stores/dialogStore";
+import {factoryAddresses} from "assets/constants/factories";
 const providerStore = useProviderStore()
 const dialogs = useDialogStore().dialogs
 const tokensStore = useTokensStore()
@@ -168,9 +169,16 @@ let recentNFTs = reactive([])
 
 initClient()
 
-let factoryAddress = providerStore.erc20Factory
+
 // Connect to the Ethereum blockchain using a provider
 const provider = await providerStore.walletProvider
+
+console.log("Network Id is ", provider.network.chainId);
+
+let factoryAddress = factoryAddresses[provider.network.chainId] ;
+console.log("Factory is ", factoryAddress)
+
+
 const connectedAccount = await getAccount()
 const walletAddress = await connectedAccount.address
 console.log('walletAddress:', walletAddress)
@@ -241,6 +249,13 @@ onMounted(() => {
   }else {
     recentCurrencies.push(...currencies.slice(0,3))
   }
+  const unwatch = watchNetwork(async (net) => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+
+  })
+
 })
 
 

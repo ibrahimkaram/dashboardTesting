@@ -83,12 +83,9 @@
 import { ref } from 'vue'
 import { configureChains, createClient, watchAccount } from "@wagmi/core";
 
-import { polygonMumbai, mainnet, polygon } from "@wagmi/core/chains";
+import { polygonMumbai, mainnet, polygon, goerli } from "@wagmi/core/chains";
 
 import { Web3Modal } from "@web3modal/html";
-
-
-import { switchNetwork } from '@wagmi/core'
 
 
 import {
@@ -106,7 +103,7 @@ definePageMeta({
 
 const projectId = "c4ebec790772322761f1607cb06c5db8"
 
-const chains = [ mainnet, polygon, polygonMumbai];
+const chains = [ mainnet, polygon, goerli ,polygonMumbai];
 
   // Wagmi Core Client
 const { provider } = configureChains(chains, [

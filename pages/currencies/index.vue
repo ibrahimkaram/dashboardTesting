@@ -68,7 +68,7 @@
                   </div>
                 </div>
                 <nav class="flex items-center justify-between border-t border-gray-200 bg-white py-4 " aria-label="Pagination">
-                  <div v-if="totalResults > 0" class="hidden sm:block">
+                  <div v-if="end > 0" class="hidden sm:block">
                     <p class="text-sm text-gray-700">
                       Showing
                       {{ ' ' }}
@@ -80,14 +80,17 @@
                       {{ ' ' }}
                       of
                       {{ ' ' }}
-                      <span class="font-medium">{{ totalResults }}</span>
+                      <span class="font-medium">{{ tokensStore.currencies.length }}</span>
                       {{ ' ' }}
                       results
                     </p>
                   </div>
                   <div class="flex flex-1 justify-between sm:justify-end">
-                    <button v-if="!firstPage" @click="previous" disabled="{{firstPage}}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
-                    <button v-if="!lastPage" @click="next" disabled="{{lastPage}}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</button>
+                    <button v-if="start!==0" @click="previous"
+                            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
+                    <button :disabled="!(end<tokensStore.currencies.length)" @click="next"
+                            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700
+                            hover:bg-gray-50 disabled:cursor-default disabled:opacity-50">Next</button>
                   </div>
                 </nav>
               </div>
@@ -116,7 +119,6 @@ import {getAccount} from "@wagmi/core";
 import {useNavStore} from "../../stores/navStore";
 
 const tokensStore = useTokensStore()
-const fullTokenList = tokensStore.currencies
 const dialogs = useDialogStore().dialogs
 const providerStore = useProviderStore()
 const navStore = useNavStore()
@@ -149,86 +151,50 @@ console.log('filtered events:', filteredLogs)
 logs.splice(0, logs.length, ...filteredLogs)
 let totalResults = logs.length
 
+let currentlyLoading = false;
 function next(){
-  // if(!currentlyLoading){
-  //   if(end < fullTokenList.length){
-  //     start = start + MAX_PAGE_SIZE
-  //     end = end + MAX_PAGE_SIZE
-  //     remaining = totalResults - start
-  //     if(end > totalResults){
-  //       end = end - MAX_PER_REQUEST + remaining
-  //     }
-  //     console.log(`totalResults = ${totalResults}`)
-  //     console.log(`start = ${start}`)
-  //     console.log(`remaining = ${remaining}`)
-  //     console.log(`end = ${end}`)
-  //     let nextTokens = fullTokenList.slice(start, end);
-  //     currentTokens.splice(0, MAX_PAGE_SIZE, ...nextTokens);
-  //   }else {
-  //     if(fullTokenList.length < logs.length){
-  //       createQueueFromLogs(logs)
-  //     }else {
-  //       console.log('you have reached the end')
-  //     }
-  //   }
-  // } else {
-  //   console.log('currentlyLoading')
-  // }
+  console.log(`start before change = ${start}`)
+  console.log(`end before change = ${end}`)
+  const isMoreTokensRemain = (end < tokensStore.currencies.length)
+  // get more tokens from cache
+  const newList = tokensStore.currencies.slice(end, (end+MAX_PAGE_SIZE))
+  // fully overwrite currentTokens
+  currentTokens.splice(0, currentTokens.length, ...newList);
+  // adjust start value: from(0).. -> from(10)..
+  start = start + MAX_PAGE_SIZE
+  // use new start to adjust new end
+  end = start + currentTokens.length //ex: (14) = (10) + (4)
+  console.log(`start = ${start}`)
+  console.log(`end = ${end}`)
+  console.log(`tokens still ahead = ${tokensStore.currencies.length - end}`)
+  updateTotalSupplyValues() // only need to call on next, not previous
 }
 
 function previous(){
-  // if(!currentlyLoading){
-  //   if(start - MAX_PAGE_SIZE < 0){
-  //     console.log('you have reached the beginning')
-  //     return
-  //   }
-  //   remaining = totalResults - start
-  //   if(remaining < MAX_PAGE_SIZE){
-  //     end = end - remaining
-  //   } else { end = end - MAX_PAGE_SIZE }
-  //   start = start - MAX_PAGE_SIZE
-  //   console.log(`totalResults = ${totalResults}`)
-  //   console.log(`start = ${start}`)
-  //   console.log(`remaining = ${remaining}`)
-  //   console.log(`end = ${end}`)
-  //   let previousTokens = fullTokenList.slice(start, end);
-  //   currentTokens.splice(0, MAX_PAGE_SIZE, ...previousTokens);
-  // }else {
-  //   console.log('currentlyLoading')
-  // }
+  // go back MAX_PAGE_SIZE
+  start = start - MAX_PAGE_SIZE
+  // get previous tokens from cache - will always be MAX_PAGE_SIZE
+  const backList = tokensStore.currencies.slice(start, (start+MAX_PAGE_SIZE));//ex: 0, (0+10)
+  // fully overwrite currentTokens
+  currentTokens.splice(0, currentTokens.length, ...backList);
+  // use new list to determine new end
+  end = start + backList.length //ex: (end) = (0) + (10)
+  console.log(`start = ${start}`)
+  console.log(`end = ${end}`)
+  console.log(`tokens still previous = ${start}`) // is simply start value
 }
 
-const MAX_PAGE_SIZE = 5;
+
+
+let MAX_PAGE_SIZE = 5;
 const MAX_PER_REQUEST = 5;
 let request = 0;
 let start = 0;
-let end = totalResults;
+let end = 0;
 let remaining;
 let lastPage = true
 let firstPage = true
 
-async function createQueueFromLogs(logs) {
-  start = request * MAX_PER_REQUEST;
-  end = start + MAX_PER_REQUEST;
-  remaining = totalResults - start;
-  if(end > totalResults){
-    end = end - MAX_PER_REQUEST + remaining
-  }
-  console.log(`totalResults = ${totalResults}`)
-  console.log(`start = ${start}`)
-  console.log(`remaining = ${remaining}`)
-  console.log(`end = ${end}`)
-
-  let pageQueue = logs.slice(start, end);
-
-  if (pageQueue.length > 0 && pageQueue.length <= MAX_PAGE_SIZE) {
-    console.log('queue is working')
-    await extractDataFromLogs(pageQueue);
-  } else {
-    console.log('queue is finished');
-  }
-
-}
 
 async function extractDataFromLogs(logs) {
   let extractedTokens = []
@@ -243,9 +209,7 @@ async function extractDataFromLogs(logs) {
 
     let totalSupply = initSupply
     if(isBurnable || isMintable){
-      const contract = await providerStore.getContract(address)
-      totalSupply = (await contract.totalSupply()).toString();
-      totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
+      totalSupply = 'Loading...'
     }
     extractedTokens.push({
       name: name,
@@ -256,18 +220,36 @@ async function extractDataFromLogs(logs) {
       type: 'ERC20',
       isMintable: isMintable,
       isBurnable: isBurnable,
-      blockNumber: log.blockNumber
+      blockNumber: log.blockNumber,
+      dateTimeCreated: 'Loading...'
     })
     console.log('token added: ', address)
   }
   console.log('extractedTokens: ', extractedTokens);
   const shortenedList = extractedTokens.slice(0, MAX_PAGE_SIZE)
+  end = start + shortenedList.length
   currentTokens.splice(0, currentTokens.length, ...shortenedList);
   await tokensStore.clearCurrencyCache()
   for(const token of extractedTokens){
     await tokensStore.addCurrency(token)
   }
-  request++;
+  console.log('tracking - finished extracting all logs')
+}
+
+async function updateTotalSupplyValues(){
+  currentlyLoading = true;
+  for(let token of currentTokens){
+    if(token.totalSupply === 'Loading...'){
+      const contract = await providerStore.getContract(token.address)
+      let totalSupply = (await contract.totalSupply()).toString();
+      totalSupply = parseInt(totalSupply, 10) / (10 ** 18);
+      token.totalSupply = totalSupply //-> updates currentTokens
+      // update the cache as well
+      await tokensStore.addCurrency(token)
+      console.log('tracking - updating totalSupply on Loading...')
+    }
+  }
+  currentlyLoading = false;
 }
 
 function navigateToPage(address) {
@@ -275,7 +257,11 @@ function navigateToPage(address) {
 }
 
 onMounted(() => {
+  console.log('tracking1')
   extractDataFromLogs(filteredLogs)
+  console.log('tracking2')
+  updateTotalSupplyValues()
+  console.log('tracking3')
 })
 
 </script>

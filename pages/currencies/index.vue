@@ -153,8 +153,6 @@ let totalResults = logs.length
 
 let currentlyLoading = false;
 function next(){
-  console.log(`start before change = ${start}`)
-  console.log(`end before change = ${end}`)
   const isMoreTokensRemain = (end < tokensStore.currencies.length)
   // get more tokens from cache
   const newList = tokensStore.currencies.slice(end, (end+MAX_PAGE_SIZE))
@@ -164,9 +162,6 @@ function next(){
   start = start + MAX_PAGE_SIZE
   // use new start to adjust new end
   end = start + currentTokens.length //ex: (14) = (10) + (4)
-  console.log(`start = ${start}`)
-  console.log(`end = ${end}`)
-  console.log(`tokens still ahead = ${tokensStore.currencies.length - end}`)
   updateTotalSupplyValues() // only need to call on next, not previous
 }
 
@@ -179,9 +174,6 @@ function previous(){
   currentTokens.splice(0, currentTokens.length, ...backList);
   // use new list to determine new end
   end = start + backList.length //ex: (end) = (0) + (10)
-  console.log(`start = ${start}`)
-  console.log(`end = ${end}`)
-  console.log(`tokens still previous = ${start}`) // is simply start value
 }
 
 

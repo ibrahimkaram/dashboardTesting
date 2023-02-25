@@ -28,10 +28,10 @@
                           <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Token</th>
                           <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Total Supply</th>
                           <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Date Created</th>
-                          <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Role</th>
+                          <!-- <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Role</th>
                           <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 md:pr-0">
                             <span class="sr-only">Edit</span>
-                          </th>
+                          </th> -->
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -39,10 +39,10 @@
                           <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ token.name }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.totalSupply }}</td>
                           <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ token.symbol }}</td>
-                          <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
+                          <!-- <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">Owner</td>
                           <td class="relative whitespace-nowrap py-4 pl-3 pr-4">
                             <DropdownButton :token="token" @click.stop=""/>
-                          </td>
+                          </td> -->
                         </tr>
                         </tbody>
                       </table>

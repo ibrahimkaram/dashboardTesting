@@ -179,8 +179,8 @@ onMounted(async () => {
     mapNetwork(chain.id);
     isMenuReady.value = true;
   } catch (e){
-    const router = useRouter();
-    router.push({ path: "/signin" });
+    // const router = useRouter();
+    // router.push({ path: "/signin" });
   }
 })
 

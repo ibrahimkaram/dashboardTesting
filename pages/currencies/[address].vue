@@ -15,16 +15,16 @@
         </div>
         <div class="px-10">
           <div>
-            <div class="sm:hidden">
+            <div class="hidden">
               <label for="tabs" class="sr-only">Select a tab</label>
               <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
               <select id="tabs" name="tabs" class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                 <option v-for="tab in tabs" :key="tab.name" :selected="tabId===tab.id">{{ tab.name }}</option>
               </select>
             </div>
-            <div class="hidden sm:block">
+            <div class="">
               <div class="border-b border-gray-200">
-                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <nav class="-mb-px flex space-x-2" aria-label="Tabs">
                   <a v-for="tab in tabs" :key="tab.name" :class="[tabId===tab.id ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300', 'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm']" :aria-current="tabId===tab.id ? 'page' : undefined">
                     <button @click="switchTabs(tab.id)" class="flex" >
                       <component :is="tab.icon" :class="[tabId===tab.id ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500', '-ml-0.5 mr-2 h-5 w-5']" aria-hidden="true" />
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="px-10">
+        <div class="px-10 min-h-60">
           <TokenFunctions v-if="tabId === 0"/>
           <TokenTransactions v-if="tabId === 1" />
           <TokenHolders v-if="tabId === 2"/>

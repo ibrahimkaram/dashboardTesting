@@ -83,9 +83,12 @@
 import { ref } from 'vue'
 import { configureChains, createClient, watchAccount } from "@wagmi/core";
 
-import { polygonMumbai, mainnet, polygon, goerli } from "@wagmi/core/chains";
+import { polygonMumbai, mainnet, polygon } from "@wagmi/core/chains";
 
 import { Web3Modal } from "@web3modal/html";
+
+
+import { switchNetwork } from '@wagmi/core'
 
 
 import {
@@ -103,7 +106,7 @@ definePageMeta({
 
 const projectId = "c4ebec790772322761f1607cb06c5db8"
 
-const chains = [ mainnet, polygon, goerli ,polygonMumbai];
+const chains = [ mainnet, polygon, polygonMumbai];
 
   // Wagmi Core Client
 const { provider } = configureChains(chains, [
@@ -111,8 +114,7 @@ const { provider } = configureChains(chains, [
 ]);
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: "Osis DashBoard", version: "1", // or "2"
-    appName: "web3Modal", chains }),
+  connectors: modalConnectors({ appName: "Osis DashBoard", chains }),
   provider,
 });
 

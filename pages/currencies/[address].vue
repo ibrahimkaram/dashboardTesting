@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="min-h-full">
-      <PopupDialog v-if="dialogs.get('send').open" :dialog="'send'"/>
+      <PopupDialog  v-if="dialogs.get('send').open" :dialog="'send'"/>
       <PopupDialog v-if="dialogs.get('mint').open" :dialog="'mint'"/>
       <PopupDialog v-if="dialogs.get('burn').open" :dialog="'burn'"/>
       <div class="py-10">
@@ -27,8 +27,8 @@
                 <nav class="-mb-px flex space-x-2" aria-label="Tabs">
                   <a v-for="tab in tabs" :key="tab.name" :class="[tabId===tab.id ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300', 'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm']" :aria-current="tabId===tab.id ? 'page' : undefined">
                     <button @click="switchTabs(tab.id)" class="flex" >
-                      <component :is="tab.icon" :class="[tabId===tab.id ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500', '-ml-0.5 mr-2 h-5 w-5']" aria-hidden="true" />
-                      <span>{{ tab.name }}</span>
+                      <component :is="tab.icon" :class="[tabId===tab.id ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500', '-ml-0.5 mr-2 h-8 w-8']" aria-hidden="true" />
+                      <span class=" hidden sm:block">{{ tab.name }}</span>
                     </button>
                   </a>
                 </nav>
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="px-10 min-h-60">
+        <div class="px-4  min-height">
           <TokenFunctions v-if="tabId === 0"/>
           <TokenTransactions v-if="tabId === 1" />
           <TokenHolders v-if="tabId === 2"/>
@@ -45,6 +45,11 @@
     </div>
   </ClientOnly>
 </template>
+<style>
+  .min-height{
+    min-height: 500px;
+  }
+</style>
 
 <script setup>
 import { ref } from 'vue'

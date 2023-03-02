@@ -5,7 +5,7 @@
         <div class="sm:flex sm:items-center">
           <div class="sm:flex-auto">
             <h1 class="text-xl font-semibold text-gray-900">Transactions</h1>
-            <p class="mt-2 text-sm text-gray-700">A history of functions called and interactions with contract</p>
+            <p class="mt-2 text-sm text-gray-700 w-full whitespace-normal ">A history of functions called and interactions with contract</p>
           </div>
         </div>
         <div class="mt-8 flex flex-col">
@@ -14,8 +14,8 @@
               <table class="min-w-full divide-y divide-gray-300">
                 <thead>
                 <tr>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Transaction Hash</th>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Transaction Type</th>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Hash</th>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Type</th>
                   <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Amount</th>
                   <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Recipient</th>
                   <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Date Created</th>
@@ -89,12 +89,12 @@ for(const event of events){
 transactions.reverse();
 
 async function logEventAsTransaction(receipt, txName, to) {
-  const shortHash = `${receipt.transactionHash.slice(0,6)}...${receipt.transactionHash.slice(6,13)}`
+  const shortHash = `${receipt.transactionHash.slice(0,4)}...${receipt.transactionHash.slice(receipt.transactionHash.length -5,receipt.transactionHash.length -1)}`
   console.log('receipt', receipt)
   const block = await provider.getBlock(receipt.blockHash);
   console.log('block', block)
 
-  const recipient = `${to.slice(0, 6)}...${to.slice(6, 13)}`
+  const recipient = `${to.slice(0, 4)}...${to.slice(9, 13)}`
 
   let weiValue;
   if (receipt.logs.length > 1) {

@@ -26,7 +26,9 @@
           </li>
         </ul>
         <div class="mt-4 flex">
-          <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+          <a href="https://launchpad.osisplatform.com/" class="text-sm font-medium text-indigo-600
+
+          hover:text-indigo-500">z
             Or start from an empty project
             <span aria-hidden="true"> &rarr;</span>
           </a>

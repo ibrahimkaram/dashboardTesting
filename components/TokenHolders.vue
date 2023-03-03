@@ -22,10 +22,12 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                 <tr v-for="holder in holders" :key="holder.amount">
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ holder.rank }}</td>
-                  <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ holder.hash }}</td>
-                  <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ holder.amount }}</td>
-                  <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ holder.percentage }}</td>
+                  <td class=" py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">{{ holder.rank }}</td>
+                  <td class="py-4 px-3 text-sm text-gray-500"><p>
+                    {{ holder.hash.slice(0,6) }}...{{holder.hash.slice(holder.hash.length -5 ,holder.hash.length -1)}}
+                  </p></td>
+                  <td class=" py-4 px-3 text-sm text-gray-500">{{ holder.amount }}</td>
+                  <td class=" py-4 px-3 text-sm text-gray-500">{{ holder.percentage }}</td>
                 </tr>
                 </tbody>
               </table>

@@ -21,7 +21,7 @@ export const useProviderStore = defineStore('provider', {
             return new ethers.providers.AlchemyProvider(this.network, this.apiKey);
         },
         walletProvider() {
-            return getProvider();
+            return getProvider()
         },
         signerProvider() {
             return fetchSigner();

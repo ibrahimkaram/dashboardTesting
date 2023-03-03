@@ -1,1 +1,1 @@
-export const alreadyExists = -1
+export const notFound = -1

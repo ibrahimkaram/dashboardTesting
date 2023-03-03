@@ -7,6 +7,7 @@ export const useDialogStore = defineStore('dialogs', {
             ['mint', { open: false }],
             ['burn', { open: false }],
             ['advanced', { open: false }],
+            ['nftSafeMint', {open: false}]
         ]),
         amount: '',
         address: ''

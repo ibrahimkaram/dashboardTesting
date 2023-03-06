@@ -4,7 +4,10 @@
       <a v-for="item in resources" :key="item.name"
          :class="['-m-3', 'flex', 'items-start',{'cursor-pointer': !item.disabled}, 'rounded-lg', 'p-3', 'transition', 'duration-150', 'ease-in-out','group/item', {'opacity-50': item.disabled},{'hover:bg-slate-100': !item.disabled}]"
          @click="!item.disabled && item.onClick()">
-        <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-indigo-600" aria-hidden="true" />
+
+          <component :is="item.icon" class="mt-2 h-6 w-6 flex-shrink-0 text-primary-blue" aria-hidden="true" />
+
+
         <div class="ml-4">
           <div class="flex flex-row">
             <p class="text-base font-medium text-gray-900">{{ item.name }}</p>

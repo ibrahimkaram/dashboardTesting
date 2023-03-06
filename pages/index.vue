@@ -20,13 +20,13 @@
                 </div>
                 <div class="mt-8 flex flex-col">
                   <div class="-my-2 -mx-4  sm:-mx-6 lg:-mx-8">
-                    <div v-if="recentCurrencies.length!==0" class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div v-if="recentCurrencies.length!==0" class=" w-full py-2 align-middle md:px-6 lg:px-8">
                       <table class="max-w-full divide-y divide-gray-300">
                         <thead>
-                        <tr>
-                          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Token</th>
-                          <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Total Supply</th>
-                          <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Date Created</th>
+                        <tr class="">
+                          <th scope="col" class="w-full  py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Token</th>
+                          <th scope="col" class="py-3.5 whitespace-nowrap px-3 text-left text-sm font-semibold text-gray-900">Total Supply</th>
+                          <th scope="col" class="py-3.5 whitespace-nowrap px-3 text-left text-sm font-semibold text-gray-900">Date Created</th>
                           <!-- <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">Role</th> -->
                           <!-- <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 md:pr-0">
                             <span class="sr-only">Edit</span>
@@ -66,7 +66,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="py-6">
+                <div class="py-6 w-full flex justify-end ">
                   <NuxtLink v-if="currencies.length > 0"
                       to="/currencies"
                       type="button"

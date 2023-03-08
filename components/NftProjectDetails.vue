@@ -4,7 +4,7 @@
       <div class="pb-5 flex items-center justify-between">
         <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">{{ token.name }}</h3>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">Features, unique tokens, and token holders.</p>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ token.description }}</p>
         </div>
         <div class="mt-3 flex sm:mt-0 sm:ml-4">
           <button @click="mint" type="button" class="inline-flex items-center rounded-full border border-transparent
@@ -52,8 +52,8 @@ console.log('contract', contract)
 let rBalance = ref('Loading...')
 let rCreationDate = ref('Loading...')
 
-const events = await contract.queryFilter('*')
-console.log('events:', events)
+// const events = await contract.queryFilter('*')
+// console.log('events:', events)
 getTokenBalance()
 getCreationDate()
 // calculateHolders()

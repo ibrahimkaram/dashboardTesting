@@ -21,6 +21,7 @@ export const useTokensStore = defineStore('tokens', {
     actions: {
         async getCurrentContract(provider) {
             let abi;
+            console.log('currentToken.type', this.currentToken.type)
             if(this.currentToken.type === 'ERC20'){ abi = erc20ABI }
             if(this.currentToken.type === 'ERC721') { abi = erc721ABI }
             return new ethers.Contract(this.currentToken.address, abi, provider);

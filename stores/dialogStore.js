@@ -7,10 +7,16 @@ export const useDialogStore = defineStore('dialogs', {
             ['mint', { open: false }],
             ['burn', { open: false }],
             ['advanced', { open: false }],
-            ['nftSafeMint', {open: false}]
+            ['nftSafeMint', {open: false}],
+            ['nftSend', {open: false}],
         ]),
-        amount: '',
-        address: ''
+        amount: '', // probably should be a number
+        address: '',
+        description: '',
+        message: '',
+        file: null,
+        name: '',
+        tokenId: 0
     }),
     actions: {
         setState(name, open){

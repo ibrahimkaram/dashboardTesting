@@ -13,13 +13,13 @@
             <div class="rounded-lg  shadow-lg">
               <div class="pt-12 px-4 sm:px-6 lg:px-8">
                 <div>
-                  <DefaultListHeader :title="'Coming soon!'"/>
-                  <p class="mt-1 max-w-2xl text-sm text-gray-500">NFTs are currently under construction. See cool examples ;)</p>
-                  <div class="pt-12">
+                  <DefaultListHeader :title="'My NFT Projects'"/>
+                  <p class="mt-1 max-w-2xl text-sm text-gray-500">Each project represents a smart contract that manages a set of NFTS.</p>
+                  <div class="py-12">
                     <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                      <li v-for="nft in currentTokens" :key="nft.cid" @click="navigateToPage(nft.address)" class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
+                      <li v-for="nft in currentContracts" :key="nft.cid" @click="navigateToPage(nft.address)" class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
                         <div class="flex flex-1 flex-col p-8">
-                          <img v-if="nft.cid" class="mx-auto h-32 w-32 flex-shrink-0" :src="nft.url" alt="" />
+                          <img v-if="nft.uri" class="mx-auto h-32 w-32 flex-shrink-0" :src="nft.uri" alt="" />
                           <h3 class="mt-6 text-sm font-medium text-gray-900">{{ nft.name }}</h3>
                           <dl class="mt-1 flex flex-grow flex-col justify-between">
                             <dt class="sr-only">Title</dt>
@@ -63,7 +63,7 @@ import {useProviderStore} from "../../stores/providerStore";
 import {onMounted, reactive} from "vue";
 import {getAccount} from "@wagmi/core";
 import {ethers} from "ethers";
-import {erc20FactoryABI, erc721FactoryABI} from "../../assets/constants/abis";
+import {erc20FactoryABI, erc721ABI, erc721FactoryABI} from "../../assets/constants/abis";
 import {navigateTo, useRuntimeConfig} from "nuxt/app";
 import axios from "axios";
 import {useTokensStore} from "../../stores/tokenStore";
@@ -71,9 +71,11 @@ import {useTokensStore} from "../../stores/tokenStore";
 const tokensStore = useTokensStore()
 const providerStore = useProviderStore()
 
-let factoryAddress = '0x72e5a2b1AFe5207c5bbAE8e360e4c6b4EC15479E';
+let factoryAddress = '0x61726DD1e64687605F7C2B4A70eBDB4ac8536831'; // beta v-1.1
+// let factoryAddress = '0x72e5a2b1AFe5207c5bbAE8e360e4c6b4EC15479E'; beta v-1.0
 
-let currentTokens = reactive([])
+
+let currentContracts = reactive([])
 
 // Connect to the Ethereum blockchain using a provider
 const provider = await providerStore.walletProvider
@@ -93,65 +95,69 @@ let totalResults = logs.length
 
 
 async function extractDataFromLogs(logs) {
-  let extractedTokens = []
+  let extractedContracts = []
   for (const log of logs) {
-    console.log('decoded-log.args:', log.args)
-    const name = log.args._token[0]
-    const symbol = log.args._token[1]
-    const isBurnable = log.args._token[4]
-    console.log('isBurnable', isBurnable)
-    const isMintable = log.args._token[5]
-    const address = log.args._token[6]
-    const cid = log.args._uri
-    console.log('uri', cid)
-    let url = `https://ipfs.io/ipfs/${cid}`
-    console.log('url', url)
-    // const dataFromURL = await fetch(url)
-    // console.log('dataFromURL:', dataFromURL)
-    // const response = await fetch(`https://api.nft.storage/bafybeiaeyu2wa7qtw7j73kkx3pslecf2mc3ty5qi3klmbgvg5xab62pmre`, {
-    //   method: 'GET',
-    //   headers: {
-    //     accept: 'application/json',
-    //     Authorization: 'Bearer ',
-    //   },
-    // })
-
-    const res = await axios.get(
-        `https://api.nft.storage/${cid}`,
-        {
-          headers:{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDAzRUJhODM1NDdlYjlkN2M5RDNEMmUzQUFjMTVmNzc1NzMwN2NDMDQiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NzI4MDc3NjAxMywibmFtZSI6IkxhdW5jaHBhZFN0b3JlS2V5In0.VTxwONCLcFGBcO9IV64URAkSDoNHTKGDi2XwxFwmnqc`,
-          }
-        }
-    ).then((res) => {
-      console.log('cid storage data:', res)
-      url = `${url}/${res.data.value.files[0].name}`
-    })
-
-
-
-    extractedTokens.push({
+    console.log('decoded-log.args._fromAddress:', log.args._fromAddress)
+    const name = log.args._token.name
+    const symbol = log.args._token.symbol
+    const isBurnable = log.args._token.isBurnable
+    console.log('isBurnable:', isBurnable)
+    const isMintable = log.args._token.isMintable
+    const tokenAddress = log.args._token.tokenAddress
+    console.log('tokenAddress:', tokenAddress)
+    let uri = 'https://i.pinimg.com/originals/05/a2/ea/05a2ea52838d1585d20bb702f42df9a2.gif'
+    extractedContracts.push({
       name: name,
       symbol: symbol,
-      address: address,
+      description: '',
+      address: tokenAddress,
       network: providerStore.network,
       type: 'ERC721',
       isMintable: isMintable,
       isBurnable: isBurnable,
       blockNumber: log.blockNumber,
       dateTimeCreated: 'Loading...',
-      cid: cid,
-      url: url
+      uri: uri,
+      uriHolder: log.args._uri
     })
-    console.log('token added: ', address)
 
   }
-  console.log('extractedTokens: ', extractedTokens);
+  currentContracts.splice(0, currentContracts.length, ...extractedContracts);
+  getImages().then()
+}
 
-  currentTokens.splice(0, currentTokens.length, ...extractedTokens);
-  for(const token of extractedTokens){
-    await tokensStore.addNFT(token)
+async function getImages(){
+  for (let i = 0; i < currentContracts.length; i++) {
+    console.log('uri:', currentContracts[i].uriHolder)
+    const uri = formatURI(currentContracts[i].uriHolder)
+    console.log('formatURI:', uri)
+    const uriData = await axios.get(uri)
+    console.log( 'axios.get(uri)', uriData)
+
+    if(uriData.data.image){
+      currentContracts[i].uri = formatURI(uriData.data.image)
+      currentContracts[i].description = uriData.data.description
+    } else {
+      // const nestedData = await axios.get(uri)
+      // console.log('nestedData', nestedData)
+      currentContracts[i].description = uriData.data.description
+      currentContracts[i].uri = 'https://docs.soliditylang.org/en/v0.8.19/_static/logo.svg'
+    }
   }
+  for(const contract of currentContracts){
+    await tokensStore.addNFT(contract)
+  }
+}
+
+function formatURI(URI){
+  let uri = URI
+  if (uri.startsWith('ipfs://')) {
+    uri = uri.replace('ipfs://', 'https://') + '.ipfs.nftstorage.link';
+  }
+  if (uri.startsWith('baf')) {
+    uri = uri.replace('baf', 'https://baf') + '.ipfs.nftstorage.link';
+  }
+  return uri;
 }
 
 function navigateToPage(address) {

@@ -256,7 +256,7 @@ function checkSigninState(){
 
 onMounted(() => {
 
-  checkSigninState()
+  //checkSigninState()
 
 
   if(currencies.length < MAX_PAGE_SIZE){

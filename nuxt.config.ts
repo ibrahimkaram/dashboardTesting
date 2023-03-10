@@ -6,7 +6,10 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@vueuse/nuxt',
     ],
-
+    //fixing Build issues
+    build: {
+        transpile: ['@heroicons/vue']
+    },
     runtimeConfig: {
         // The private keys which are only available within server-side
         ipfsToken: process.env.IPFS_TOKEN,

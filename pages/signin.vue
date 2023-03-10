@@ -111,7 +111,7 @@ const { provider } = configureChains(chains, [
 ]);
 const wagmiClient = createClient({
   autoConnect: false,
-  connectors: modalConnectors({ appName: "Osis DashBoard", version: "1", // or "2"
+  connectors: modalConnectors({ appName: "Osis DashBoard", version: "1.2", // or "2"
      chains }),
   provider,
 });

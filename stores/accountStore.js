@@ -54,8 +54,9 @@ export const useAccountStore = defineStore('account', {
                 {
                     console.log(account)
                     if(account.isConnected){
-                        const router = useRouter();
-                        router.push({ path: "/" });
+                        this.isConnected = true;
+                    }else{
+                        this.isConnected = false;
                     }
 
                 }

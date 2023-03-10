@@ -57,8 +57,8 @@
 
       <DisclosurePanel class="sm:hidden">
         <ClientOnly>
-          <div class="space-y-1 pt-2 pb-3">
-            <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :class="[useNavStore().pageId===item.id ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800', 'block pl-3 pr-4 py-2 border-l-4 text-base font-medium']" :aria-current="useNavStore().pageId===item.id ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+          <div class="space-y-1 pt-2 pb-3 bg-red-500">
+            <DisclosureButton v-for="item in navigation" :key="item.name" as="div" @click="navigateToPage(item.id)" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">{{ item.name }}</DisclosureButton>
           </div>
         </ClientOnly>
         <div class="border-t border-gray-200 pt-4 pb-3">
@@ -75,7 +75,7 @@
               <BellIcon class="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div class="mt-3 space-y-1">
+          <div class="mt-3 space-y-1 ">
             <DisclosureButton v-for="item in userNavigation" :key="item.name" as="div" @click="navigateToPage(item.id)" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">{{ item.name }}</DisclosureButton>
           </div>
         </div>
@@ -126,10 +126,22 @@ function switchTabs(id){
   console.log('useNavStore().pageId => ',useNavStore().pageId)
 }
 async function navigateToPage(pageId) {
+  console.log("Trying to nav to ", pageId)
+
+  const router = useRouter();
   if(pageId === 3){
     await disconnect()
-    const router = useRouter();
+
     router.push({ path: "/signin" });
+
+  }else if (pageId===0){
+    router.push({ path: "/" });
+  }
+  else if (pageId===1){
+    router.push({ path: "/currencies/" });
+  }
+  else if (pageId===2){
+    router.push({ path: "/nfts/" });
   }
 }
 

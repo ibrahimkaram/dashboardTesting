@@ -50,13 +50,18 @@ export const useAccountStore = defineStore('account', {
                 this.isConnected = true;
                 return
             }
+            const unwatchAccount = watchAccount((account) =>
+                {
+                    console.log(account)
+                    if(account.isConnected){
+                        const router = useRouter();
+                        router.push({ path: "/" });
+                    }
 
+                }
+            )
             await web3modal.openModal();
-            account = getAccount()
-            if(account.isConnected) {
-                console.log("We are Connected")
-                this.isConnected = true;
-            }
+
 
         },
         setWatcher(){

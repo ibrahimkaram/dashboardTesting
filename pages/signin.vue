@@ -20,7 +20,8 @@
 
                 <div class="flex flex-col items-center w-full py-2">
 
-                    <button @click="connectWallet">{{ account.isConnected ? "Next" : "Connect Wallet" }}</button>
+                    <button @click="connectWallet">{{ account.isConnected ? "Connected" : "Connect Wallet" }}</button>
+
 
 
                 </div>
@@ -38,7 +39,7 @@
 
             <div class="mt-6">
               <div>
-                <form action="#" method="POST" class="space-y-6">
+                <div  class="space-y-6">
                   <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                     <div class="mt-1">
@@ -65,9 +66,11 @@
                   </div>
 
                   <div>
-                    <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-blue-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign in</button>
+                    <button @click="nextPage" class="flex w-full justify-center rounded-md border border-transparent bg-blue-700
+                     py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none
+                     focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{!account.isConnected ? "Sign in" : "Next"}}</button>
                   </div>
-                </form>
+                </div>
               </div>
 
             </div>
@@ -95,17 +98,18 @@ definePageMeta({
 
 
 const account = useAccountStore();
+account.setClient()
 
 function connectWallet(){
+  account.signIn()
+}
 
+function nextPage(){
   if(account.isConnected) {
     const router = useRouter();
     router.push({ path: "/" });
   }
-  account.signIn()
-
 }
-
 
 
 

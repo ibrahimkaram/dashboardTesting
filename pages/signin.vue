@@ -110,7 +110,7 @@ const { provider } = configureChains(chains, [
   walletConnectProvider({ projectId: projectId}),
 ]);
 const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors: modalConnectors({ appName: "Osis DashBoard", version: "1", // or "2"
      chains }),
   provider,

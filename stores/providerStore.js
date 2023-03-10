@@ -3,7 +3,7 @@ import {ethers} from "ethers";
 
 import {goerli, mainnet, polygon, polygonMumbai} from "@wagmi/core/chains";
 import {configureChains, createClient, fetchSigner, getProvider, normalizeChainId} from "@wagmi/core";
-import {modalConnectors, walletConnectProvider} from "@web3modal/ethereum";
+
 import {factoryAddresses, nftFactoryAddresses} from "assets/constants/factories";
 import {erc20ABI} from "assets/constants/abis";
 
@@ -48,17 +48,3 @@ export const useProviderStore = defineStore('provider', {
         },
     }
 });
-
-export function initClient(){
-
-    const projectId = "c4ebec790772322761f1607cb06c5db8"
-    const chains = [ polygon , mainnet, goerli, polygonMumbai];
-    const { provider } = configureChains(chains, [
-        walletConnectProvider({ projectId: projectId}),
-    ]);
-    return  createClient({
-        autoConnect: true,
-        connectors: modalConnectors({ appName: "Osis DashBoard", chains }),
-        provider,
-    });
-}

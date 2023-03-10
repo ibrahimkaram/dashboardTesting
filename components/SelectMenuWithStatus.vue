@@ -52,19 +52,15 @@ import { Web3Modal } from "@web3modal/html";
 
 
 import { switchNetwork } from '@wagmi/core'
-import { initClient } from "~/stores/providerStore";
+
 
 import { useProviderStore } from "~/stores/providerStore";
-
-import {
-  EthereumClient,
-  modalConnectors,
-  walletConnectProvider,
-} from "@web3modal/ethereum";
+import {useAccountStore} from "~/stores/accountStore";
 
 
 
-const wgClient = initClient()
+useAccountStore().setClient()
+
 
 
 
@@ -74,19 +70,9 @@ definePageMeta({
 });
 
 
-const unwatchAccount = watchAccount((account) =>
-    {
-      console.log(account)
-      if(account.isDisconnected){
-        const router = useRouter();
-        router.push({ path: "/signin" });
-        console.log("time to leave")
-      }
-    }
 
 
 
-)
 
 
 

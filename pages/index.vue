@@ -151,13 +151,14 @@ import DropdownButton from "/components/DropdownButton";
 import EmptyTokenListState from "/components/EmptyTokenListState";
 
 import {ethers } from "ethers";
-import {erc20ABI, erc20FactoryABI} from "../assets/constants/abis";
+import {erc20FactoryABI} from "../assets/constants/abis";
 import { useTokensStore } from "../stores/tokenStore";
-import {initClient, useProviderStore} from "../stores/providerStore";
+import {useProviderStore} from "../stores/providerStore";
 import {getAccount, watchNetwork} from '@wagmi/core'
 import {useNavStore} from "../stores/navStore";
 import {useDialogStore} from "../stores/dialogStore";
 import {factoryAddresses} from "assets/constants/factories";
+import {useAccountStore} from "~/stores/accountStore";
 const providerStore = useProviderStore()
 const dialogs = useDialogStore().dialogs
 const tokensStore = useTokensStore()
@@ -167,11 +168,13 @@ const nfts = tokensStore.nfts
 let recentCurrencies = reactive([])
 let recentNFTs = reactive([])
 
-initClient()
 
+const account = useAccountStore()
+
+account.setClient()
 
 // Connect to the Ethereum blockchain using a provider
-const provider = await providerStore.walletProvider
+const provider = await account.walletProvider
 
 console.log("Network Id is ", provider.network.chainId);
 
@@ -256,7 +259,7 @@ function checkSigninState(){
 
 onMounted(() => {
 
-  //checkSigninState()
+  checkSigninState()
 
 
   if(currencies.length < MAX_PAGE_SIZE){

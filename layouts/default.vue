@@ -92,7 +92,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { disconnect, } from '@wagmi/core'
-import {initClient} from "~/stores/providerStore";
+
 import {useNavStore} from "../stores/navStore";
 import {ref} from "vue";
 
@@ -118,7 +118,7 @@ const userNavigation = [
   { name: 'Sign out', to: '/' , id:3},
 ]
 
-initClient()
+
 
 function switchTabs(id){
   navStore.setPageId(id)

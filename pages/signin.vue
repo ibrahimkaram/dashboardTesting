@@ -19,7 +19,10 @@
                 <p class="text-md font-medium text-gray-700 mb-4">Sign in with</p>
 
                 <div class="flex flex-col items-center w-full py-2">
-                  <w3m-core-button></w3m-core-button>
+
+                    <button @click="connectWallet">{{ account.isConnected ? "Next" : "Connect Wallet" }}</button>
+
+
                 </div>
               </div>
 
@@ -80,19 +83,9 @@
 
 <script setup>
 
-import { ref } from 'vue'
-import { configureChains, createClient, watchAccount } from "@wagmi/core";
 
-import { polygonMumbai, mainnet, polygon, goerli } from "@wagmi/core/chains";
-
-import { Web3Modal } from "@web3modal/html";
-
-
-import {
-  EthereumClient,
-  modalConnectors,
-  walletConnectProvider,
-} from "@web3modal/ethereum";
+import {useAccountStore} from "~/stores/accountStore";
+import {watchAccount} from "@wagmi/core";
 
 
 
@@ -101,46 +94,23 @@ definePageMeta({
 });
 
 
-const projectId = "c4ebec790772322761f1607cb06c5db8"
+const account = useAccountStore();
 
-const chains = [ mainnet, polygon, goerli ,polygonMumbai];
+function connectWallet(){
 
-// Wagmi Core Client
-const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: projectId}),
-]);
-const wagmiClient = createClient({
-  autoConnect: false,
-  connectors: modalConnectors({ appName: "Osis DashBoard", version: "1.2", // or "2"
-     chains }),
-  provider,
-});
+  if(account.isConnected) {
+    const router = useRouter();
+    router.push({ path: "/" });
+  }
+  account.signIn()
 
-// Web3Modal and Ethereum Client
-const ethereumClient = new EthereumClient(wagmiClient, chains);
-const web3modal = new Web3Modal(
-    { projectId: projectId },
-    ethereumClient
-);
+}
 
-console.log('connections is done' )
 
-web3modal.setTheme({
-  themeMode: "light",
-  themeColor: "blue",
-  themeBackground: "themeColor",
-});
 
-const unwatchAccount = watchAccount((account) =>
-    {
-      console.log(account)
-      if(account.isConnected){
-        const router = useRouter();
-        router.push({ path: "/" });
-      }
 
-    }
-)
+onMounted(async ()=>{
 
+})
 
 </script>

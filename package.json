@@ -18,9 +18,9 @@
   "dependencies": {
     "@heroicons/vue": "^2.0.13",
     "@pinia/nuxt": "^0.4.6",
-    "@wagmi/core": "^0.8.14",
-    "@web3modal/ethereum": "^2.0.0-rc.2",
-    "@web3modal/html": "^2.0.0-rc.2",
+    "@wagmi/core": "^0.10.1",
+    "@web3modal/ethereum": "^2.2.0",
+    "@web3modal/html": "^2.2.0",
     "ethers": "^5.7.2",
     "moment": "^2.29.4",
     "pinia": "^2.0.29",

@@ -57,7 +57,7 @@
 
       <DisclosurePanel class="sm:hidden">
         <ClientOnly>
-          <div class="space-y-1 pt-2 pb-3 bg-red-500">
+          <div class="space-y-1 pt-2 pb-3 ">
             <DisclosureButton v-for="item in navigation" :key="item.name" as="div" @click="navigateToPage(item.id)" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">{{ item.name }}</DisclosureButton>
           </div>
         </ClientOnly>

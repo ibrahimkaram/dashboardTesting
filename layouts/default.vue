@@ -115,7 +115,7 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', to: '/', id:0 },
   { name: 'Settings', to: '/' , id : 1},
-  { name: 'Sign out', to: '/' , id:3},
+  { name: 'Sign out', to: '/' , id:-1},
 ]
 
 
@@ -129,7 +129,7 @@ async function navigateToPage(pageId) {
   console.log("Trying to nav to ", pageId)
 
   const router = useRouter();
-  if(pageId === 3){
+  if(pageId === -1){
     await disconnect()
 
     router.push({ path: "/signin" });
@@ -142,6 +142,9 @@ async function navigateToPage(pageId) {
   }
   else if (pageId===2){
     router.push({ path: "/nfts/" });
+
+  }else if (pageId===3){
+    router.push({ path: "/launchpad/" });
   }
 }
 

@@ -8,3 +8,14 @@ export const factoryAddresses = {
     '5': '0xe031289459D003c183483BCe69a586fCff3e78A0', // gorli
     '80001' : '0xe5a55C2059CD7473cadC129EDf75FBD1C2237b45' // mumbai
 };
+
+export const nftFactoryAddresses = {
+    'goerli': '0x61726DD1e64687605F7C2B4A70eBDB4ac8536831',
+    'polygon': '0xa5d4fc36047878faBebf5A4e014658c50543736E',
+    // 'mainnet': '',
+    'mumbai': '0x17D42F2aA68330cF30573cA93113DfD0c6459441',
+    '137': '0xa5d4fc36047878faBebf5A4e014658c50543736E', // polygon
+    // '1': '', // mainnet
+    '5': '0x61726DD1e64687605F7C2B4A70eBDB4ac8536831', // gorli
+    '80001' : '0x17D42F2aA68330cF30573cA93113DfD0c6459441' // mumbai
+}

@@ -17,7 +17,7 @@
                   <p class="mt-1 max-w-2xl text-sm text-gray-500">Each project represents a smart contract that manages a set of NFTS.</p>
                   <div class="py-12">
                     <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                      <li v-for="nft in currentContracts" :key="nft.cid" @click="navigateToPage(nft.address)" class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
+                      <li v-for="nft in currentContracts" :key="nft.cid" @click="navigateToPage(nft.address)" class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow hover:cursor-pointer">
                         <div class="flex flex-1 flex-col p-8">
                           <img v-if="nft.uri" class="mx-auto h-32 w-32 flex-shrink-0" :src="nft.uri" alt="" />
                           <h3 class="mt-6 text-sm font-medium text-gray-900">{{ nft.name }}</h3>
@@ -53,6 +53,8 @@
 </template>
 
 <script setup>
+import {factoryAddresses, nftFactoryAddresses} from "../../assets/constants/factories";
+
 const pageName = 'Launched NFT Projects'
 const crumbs = [
   { name: 'Overview', to: '/', current: false },
@@ -71,10 +73,6 @@ import {useTokensStore} from "../../stores/tokenStore";
 const tokensStore = useTokensStore()
 const providerStore = useProviderStore()
 
-let factoryAddress = '0x61726DD1e64687605F7C2B4A70eBDB4ac8536831'; // beta v-1.1
-// let factoryAddress = '0x72e5a2b1AFe5207c5bbAE8e360e4c6b4EC15479E'; beta v-1.0
-
-
 let currentContracts = reactive([])
 
 // Connect to the Ethereum blockchain using a provider
@@ -82,9 +80,13 @@ const provider = await providerStore.walletProvider
 const connectedAccount = await getAccount()
 const walletAddress = await connectedAccount.address
 
+let factoryAddress = nftFactoryAddresses[provider.network.chainId];
+console.log("Factory is ", factoryAddress)
+
 const factoryInstance = new ethers.Contract(factoryAddress, erc721FactoryABI, provider);
 console.log('factoryInstance = ', factoryInstance)
 let logs = await factoryInstance.queryFilter('Created');
+console.log('logs:', logs)
 console.log('events:', logs);
 
 const filteredLogs = logs.filter((_, index) => logs[index].args._fromAddress === walletAddress);

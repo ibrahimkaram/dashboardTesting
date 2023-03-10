@@ -4,7 +4,7 @@ import {ethers} from "ethers";
 import {goerli, mainnet, polygon, polygonMumbai} from "@wagmi/core/chains";
 import {configureChains, createClient, fetchSigner, getProvider, normalizeChainId} from "@wagmi/core";
 import {modalConnectors, walletConnectProvider} from "@web3modal/ethereum";
-import {factoryAddresses} from "assets/constants/factories";
+import {factoryAddresses, nftFactoryAddresses} from "assets/constants/factories";
 import {erc20ABI} from "assets/constants/abis";
 
 
@@ -31,6 +31,15 @@ export const useProviderStore = defineStore('provider', {
                 return factoryAddresses[this.network];
             } // else ->
             throw new Error(`Unsupported network: ${this.network}`);
+        },
+        erc721Factory(){
+            if (this.network in nftFactoryAddresses) {
+                return nftFactoryAddresses[this.network];
+            } // else ->
+            throw new Error(`Unsupported network: ${this.network}`);
+        },
+        setNetwork(network){
+            this.network = network
         }
     },
     actions: {

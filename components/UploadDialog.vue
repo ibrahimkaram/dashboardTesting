@@ -10,17 +10,34 @@
           <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
 
-              <div>
+              <div v-if="!loading & !failure">
                 <UploadTest v-if="dialog === 'nftSafeMint'"/>
                 <TransferTest v-if="dialog === 'nftSend'"/>
               </div>
 
+              <div v-if="loading" class="text-center py-8">
+                <h3 v-if="loading" class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{loadingMsg}}</h3>
+              </div>
+              <img v-if="loading" :src="loadingImg"/>
+              <div v-if="loading" class="text-center">
+                <p >Please wait...</p>
+              </div>
+
+              <div v-if="failure" class="text-center py-8">
+                <h3 v-if="failure" class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{failureType}}</h3>
+              </div>
+              <img v-if="failure" :src="failureImg"/>
+              <div v-if="failure" class="text-center">
+                <span class="text-blue-500 cursor-pointer" @click="showError = !showError">See error</span>
+                <p v-if="showError" >{{ failureMsg }}</p>
+              </div>
+
               <div class="pb-4 mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-                <button type="button" class="inline-flex w-full justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-base font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                <button v-if="!loading" type="button" class="inline-flex w-full justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-base font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                         @click="positiveClick">
                   {{ positiveButtonText }}
                 </button>
-                <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                <button v-if="!loading" type="button" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                         @click="close" ref="cancelButtonRef">
                   Cancel
                 </button>
@@ -44,11 +61,23 @@ import {useProviderStore} from "../stores/providerStore";
 import {fetchSigner, getAccount, prepareWriteContract, writeContract} from "@wagmi/core";
 import axios from "axios";
 import TransferTest from "./TransferTest";
+import {ref} from "vue";
+import {useRuntimeConfig} from "nuxt/app";
 const { dialog } = defineProps(['dialog'])
 const dialogStore = useDialogStore()
 const dialogs = dialogStore.dialogs
 const tokenStore = useTokensStore()
 const provider = useProviderStore()
+const runtimeConfig = useRuntimeConfig();
+
+const loading = ref(false)
+const loadingImg = ref('')
+const loadingMsg = ref('')
+const failure = ref(false)
+const failureImg = ref('')
+const failureMsg = ref('')
+const failureType = ref('')
+const showError = ref(false)
 
 let positiveButtonText = ''
 if(dialog === 'nftSafeMint'){
@@ -86,8 +115,13 @@ async function safeTransfer() {
     console.log('to:', toAddress)
     const result = await contract["safeTransferFrom(address,address,uint256)"](fromAddress, toAddress, tokenId);
     console.log('result: ', result)
+    close()
   } catch (e) {
     console.log('safeTransfer exception:', e)
+    failure.value = true;
+    failureType.value = 'Failed to Send';
+    failureMsg.value = e
+    failureImg.value = 'https://i.pinimg.com/originals/ef/8b/bd/ef8bbd4554dedcc2fd1fd15ab0ebd7a1.gif'
   }
 }
 
@@ -99,11 +133,15 @@ async function safeMintToken() { // toAddress, metaDataUri
   let mintSuccess;
   const metaCID = await storeMetaData()
   if(metaCID){
+    loadingMsg.value = 'Minting NFT'
+    loadingImg.value = 'https://assets-global.website-files.com/618a9dc0e5826661c77e6a67/622737b708da68d2034cfdb4_NFT%20Express%20machine.gif'
     mintSuccess = await mint(metaCID)
   }
   if(mintSuccess){
     close()
   }
+  // stop loading regardless of outcome
+  loading.value = false;
 }
 
 async function mint(metaCID){
@@ -119,30 +157,38 @@ async function mint(metaCID){
   } catch (error) {
     console.error('Error:', error);
     mintSuccess = false;
+    failure.value = true;
+    failureType.value = 'Failed to Mint';
+    failureMsg.value = error
+    failureImg.value = 'https://i.pinimg.com/originals/ef/8b/bd/ef8bbd4554dedcc2fd1fd15ab0ebd7a1.gif'
   }
   return mintSuccess;
 }
 
 async function storeMetaData(){
-  const imageCID = await storeImage()
-  const metaData = {
-    name: dialogStore.name,
-    description: dialogStore.description,
-    image: `ipfs://${imageCID}`,
-  }
-  // console.log('metaData:', metaData)
   let metaCID;
-  const metaResponse = await uploadToIPFS(metaData)
-  if(metaResponse.ok){
-    metaCID = metaResponse.value.cid
+  const imageCID = await storeImage()
+  if(imageCID){
+    const metaData = {
+      name: dialogStore.name,
+      description: dialogStore.description,
+      image: `ipfs://${imageCID}`,
+    }
+    const metaResponse = await uploadToIPFS(metaData)
+    if(metaResponse && metaResponse.ok){
+      metaCID = metaResponse.value.cid
+    }
   }
   return metaCID
 }
 
 async function storeImage(){
+  loading.value = true
+  loadingMsg.value = 'Uploading Image'
+  loadingImg.value = 'https://cdn.dribbble.com/users/2760451/screenshots/5656895/cloud-upload.gif'
   let imageCID;
   const imgResponse = await uploadToIPFS(dialogStore.file)
-  if(imgResponse.ok){
+  if(imgResponse && imgResponse.ok){
     imageCID = imgResponse.value.cid
   }
   return imageCID
@@ -156,7 +202,7 @@ async function uploadToIPFS(content){
   try{
     const response = await axios.post('https://api.nft.storage/upload', content, {
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDAzRUJhODM1NDdlYjlkN2M5RDNEMmUzQUFjMTVmNzc1NzMwN2NDMDQiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NzI4MDc3NjAxMywibmFtZSI6IkxhdW5jaHBhZFN0b3JlS2V5In0.VTxwONCLcFGBcO9IV64URAkSDoNHTKGDi2XwxFwmnqc',
+        Authorization: 'Bearer ' + runtimeConfig.public.ipfsToken
       },
     })
     result.data = response.data
@@ -165,6 +211,10 @@ async function uploadToIPFS(content){
     console.log('uploadToIPFS error:', e)
     result.data = null;
     result.success = false;
+    failure.value = true;
+    failureType.value = 'Failed to Upload';
+    failureMsg.value = e;
+    failureImg.value = 'https://i.pinimg.com/originals/ef/8b/bd/ef8bbd4554dedcc2fd1fd15ab0ebd7a1.gif'
   }
   return result.data;
 }

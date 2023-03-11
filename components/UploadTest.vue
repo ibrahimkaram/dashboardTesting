@@ -38,13 +38,13 @@
           <label for="wallet-address" class="block text-sm font-medium text-gray-700">Mint To</label>
           <div class="mt-1 flex rounded-md shadow-sm">
             <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">address:</span>
-            <input type="text" name="wallet-address" id="wallet-address" v-model="useDialogStore().address" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0xf986...05e7a" />
+            <input type="text" name="wallet-address" id="wallet-address" v-model="useDialogStore().address" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 px-3 py-2 focus:border-indigo-500 text-sm" placeholder="0xf986...05e7a" />
           </div>
         </div>
         <div class="sm:col-span-2">
           <label for="name" class="block text-sm font-medium text-gray-700">Token Name</label>
           <div class="mt-1">
-            <input name="name" id="name" v-model="useDialogStore().name" class="block w-full rounded-md border-gray-300 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "  />
+            <input type="text" name="name" id="name" v-model="useDialogStore().name" class="block w-full rounded-md min-w-0 flex-1 border-gray-300 px-3 py-2 text-gray-900 shadow-sm text-sm"  />
           </div>
         </div>
         <div class="sm:col-span-2">

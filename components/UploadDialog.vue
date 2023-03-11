@@ -202,7 +202,7 @@ async function uploadToIPFS(content){
   try{
     const response = await axios.post('https://api.nft.storage/upload', content, {
       headers: {
-        Authorization: 'Bearer ' + runtimeConfig.public.ipfsToken
+        Authorization: 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDk5MzlDN2FBQjJiYzVCMTFFOEJlOEYyYTE2NTEyQzg4N2I4N0FDMmUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3ODQxMTgxNDk2OSwibmFtZSI6InRlc3Rpbmd3aXRoY2F0In0.RSjac9yYkC7cB12pHcm41f27J1aJ6umlYUb1VG29b_Y"
       },
     })
     result.data = response.data

@@ -59,6 +59,7 @@ import {useRoute} from "nuxt/app";
 import PopupDialog from "../../components/PopupDialog";
 import {useDialogStore} from "../../stores/dialogStore";
 import {useTokensStore} from "../../stores/tokenStore";
+import {watchNetwork} from "@wagmi/core";
 
 const tokensStore = await useTokensStore()
 const {address} = useRoute().params
@@ -90,6 +91,14 @@ function switchTabs(id){
   tabId.value = id; // set tab value
   console.log("this switch happening")
 }
+onMounted(()=>{
+  const unwatch = watchNetwork(async (net) => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  })
+
+})
 
 </script>
 

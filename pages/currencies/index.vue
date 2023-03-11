@@ -115,7 +115,7 @@ import {ethers, utils} from 'ethers';
 import {erc20ABI, erc20FactoryABI} from "/assets/constants/abis";
 import {useDialogStore} from "../../stores/dialogStore";
 import {useProviderStore} from "../../stores/providerStore";
-import {getAccount} from "@wagmi/core";
+import {getAccount, watchNetwork} from "@wagmi/core";
 import {useNavStore} from "../../stores/navStore";
 
 const tokensStore = useTokensStore()
@@ -254,6 +254,11 @@ onMounted(() => {
   console.log('tracking2')
   updateTotalSupplyValues()
   console.log('tracking3')
+  const unwatch = watchNetwork(async (net) => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  })
 })
 
 </script>

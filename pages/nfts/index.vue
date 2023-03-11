@@ -63,7 +63,7 @@ const crumbs = [
 
 import {useProviderStore} from "../../stores/providerStore";
 import {onMounted, reactive} from "vue";
-import {getAccount} from "@wagmi/core";
+import {getAccount, watchNetwork} from "@wagmi/core";
 import {ethers} from "ethers";
 import {erc20FactoryABI, erc721ABI, erc721FactoryABI} from "../../assets/constants/abis";
 import {navigateTo, useRuntimeConfig} from "nuxt/app";
@@ -168,6 +168,11 @@ function navigateToPage(address) {
 
 onMounted(() => {
   extractDataFromLogs(filteredLogs)
+  const unwatch = watchNetwork(async (net) => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  })
 })
 
 </script>

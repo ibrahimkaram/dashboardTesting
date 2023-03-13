@@ -16,12 +16,28 @@ export const useAccountStore = defineStore('account', {
         apiKey: 'IujOeHw6FElFb9cvUbH6mEV0pIVeAN-0',
         isConnected: false ,
         address: "",
+        networkChoice: "Goerli"
 
 
     }),
     getters: {
         walletProvider(){
             return getProvider()
+        }
+        ,getNetWorkChoice(){
+            switch (this.networkChoice) {
+                case 'Goerli':
+                    return goerli
+                case 'Ethereum' :
+                    return mainnet
+                case 'Polygon':
+                    return polygon
+                case 'Mumbai':
+                    return polygonMumbai
+
+
+            }
+
         }
 
     },
@@ -43,7 +59,7 @@ export const useAccountStore = defineStore('account', {
             const ethereumClient = new EthereumClient(wagmiClient, chains)
             const web3modal = new Web3Modal({ projectId }, ethereumClient)
 
-            web3modal.setDefaultChain(goerli) ;
+            web3modal.setDefaultChain(this.getNetWorkChoice) ;
             let account = getAccount()
             if(account.isConnected) {
                 console.log("We are Connected")

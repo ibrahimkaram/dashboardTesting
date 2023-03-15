@@ -1,18 +1,22 @@
 <template>
   <div class="overflow-hidden bg-white shadow-lg sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6">
-      <div class="pb-5 flex items-center justify-between">
+      <div class="pb-5 flex  sm:flex-auto items-center justify-between">
         <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">{{ token.name }}</h3>
           <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ token.description }}</p>
         </div>
         <div class="mt-3 flex sm:mt-0 sm:ml-4">
-          <button @click="mint" type="button" class="inline-flex items-center rounded-full border border-transparent
+          <button @click="mint" type="button" class="hidden sm:block inline-flex items-center rounded-full border border-transparent
                     bg-primary-blue px-6 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75
                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
             <PlusIcon class="mr-0.5 my-0.5 h-5 w-5"/>
             Mint {{token.name}} token
           </button>
+          <button @click="mint"  class="block sm:hidden">
+            <PlusIcon class="mr-0.5 my-0.5 h-10 w-10"/>
+          </button>
+
         </div>
       </div>
     </div>

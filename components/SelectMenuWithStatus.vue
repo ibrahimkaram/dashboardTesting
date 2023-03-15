@@ -139,8 +139,8 @@ function mapNetwork(chainindex) {
       mainStore.networkId  = "Goerli";
       break  ;
     default :
-      mynetworkName.value = "Unsupported";
-      mainStore.networkId = "Unsupported";
+      mynetworkName.value = "Mumbai";
+      mainStore.networkId = "Mumbai";
       break ;
   }
 

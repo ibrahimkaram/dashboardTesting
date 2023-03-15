@@ -219,6 +219,14 @@ async function uploadToIPFS(content){
   return result.data;
 }
 
+// async function getIpfsToken() {
+//   const response = await fetch('/api/ipfs-token')
+//   const data = await response.json()
+//   return data.ipfsToken
+// }
+//
+// const ipfsToken = await getIpfsToken()
+
 async function fakeImageUpload(content){
   console.log('fakeImageUpload: ', content)
   return fakeImageResponse;

@@ -80,7 +80,7 @@ const provider = await providerStore.walletProvider
 const connectedAccount = await getAccount()
 const walletAddress = await connectedAccount.address
 
-let factoryAddress = nftFactoryAddresses[provider.network.chainId];
+ let factoryAddress = nftFactoryAddresses[useProviderStore().networkId];
 console.log("Factory is ", factoryAddress)
 
 const factoryInstance = new ethers.Contract(factoryAddress, erc721FactoryABI, provider);

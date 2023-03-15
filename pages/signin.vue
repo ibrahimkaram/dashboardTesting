@@ -20,8 +20,11 @@
 
                 <div class="flex flex-col items-center w-full py-2">
 
-                    <button @click="connectWallet">{{ account.isConnected ? "Connected" : "Connect Wallet" }}</button>
-
+                  <SelectNetworkChoice/>
+<!--                    <button @click="connectWallet">{{ account.isConnected ? "Connected" : "Connect Wallet" }}</button>-->
+<!--                 -->
+                  <div class="h-4"></div>
+                  <w3m-core-button @click="connectWallet"></w3m-core-button>
 
 
                 </div>
@@ -92,16 +95,48 @@ import {watchAccount} from "@wagmi/core";
 
 
 
+import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
+import { Web3Modal } from '@web3modal/html'
+import { configureChains, createClient } from '@wagmi/core'
+import { goerli, mainnet, polygon, polygonMumbai} from '@wagmi/core/chains'
+
+const chains = [ mainnet, polygon, goerli , polygonMumbai]
+const projectId = '7896a619a3c50d1502018f25e342bfac'
+
+const account = useAccountStore();
+
+const { provider } = configureChains(chains, [w3mProvider({ projectId })])
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: w3mConnectors({ projectId, version: 1, chains }),
+  provider
+})
+const ethereumClient = new EthereumClient(wagmiClient, chains)
+const web3modal = new Web3Modal({ projectId }, ethereumClient)
+
+web3modal.setDefaultChain(account.getNetWorkChoice) ;
+
 definePageMeta({
   layout: false,
 });
 
 
-const account = useAccountStore();
-account.setClient()
-
 function connectWallet(){
-  account.signIn()
+
+  web3modal.setDefaultChain(account.getNetWorkChoice) ;
+  const unwatchAccount = watchAccount((account) =>
+      {
+
+        console.log(account)
+        if(account.isConnected){
+          const router = useRouter();
+          router.push({ path: "/" });
+        }else{
+          this.isConnected = false;
+        }
+
+      }
+  )
 }
 
 function nextPage(){
